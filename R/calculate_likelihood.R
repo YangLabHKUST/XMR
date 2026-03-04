@@ -1,3 +1,5 @@
+#' @title cal_likeli
+#' @export
 # The function for calculating likelihood
 cal_likeli <- function(hat.b, A, Var, S, C1, C2, pi0){
 

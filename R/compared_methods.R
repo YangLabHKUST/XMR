@@ -1,5 +1,6 @@
 utils::globalVariables(c("b.exp"))
 
+#' @export
 ci_normal <- function(type, mean, se, alpha){
   x <- 1 - alpha/2
   
@@ -7,6 +8,7 @@ ci_normal <- function(type, mean, se, alpha){
   else if (type == "u") return(mean + qnorm(x)*se)
 }
 
+#' @export
 ci_t <- function(type, mean, se, df, alpha){
   x <- 1 - alpha/2
   
@@ -14,6 +16,7 @@ ci_t <- function(type, mean, se, df, alpha){
   else if (type == "u") return(mean + qt(x, df = df)*se)
 }
 
+#' @export
 mr_conmix <- function(snps, Bx ,By, Bxse, Byse, psi = 0, CIMin  = NA, CIMax  = NA, CIStep = 0.01,
                       alpha = 0.05)
 {
@@ -73,6 +76,7 @@ mr_conmix <- function(snps, Bx ,By, Bxse, Byse, psi = 0, CIMin  = NA, CIMax  = N
               Alpha = alpha))
 }
 
+#' @export
 mr_lasso <- function(snps, Bx ,By, Bxse, Byse, distribution = "normal", alpha = 0.05, 
                      lambda = c(seq(from=0.01, to=2, by=0.01), seq(from=2.2, to=10, by=0.2))){
   nsnps = length(Bx)
@@ -153,6 +157,7 @@ mr_lasso <- function(snps, Bx ,By, Bxse, Byse, distribution = "normal", alpha = 
   }
 }
 
+#' @export
 runMRmethods <- function(dat, set.seed = T, ldmat=NULL, Threshold=5e-08, exposure="exposure", outcome="outcome",
                          methods.list = c("IVW","dIVW", "RAPS","Egger", "MRMix",
                                           "Weighted-median", "Weighted-mode", "BWMR","MR-PRESSO","MR-Lasso"),

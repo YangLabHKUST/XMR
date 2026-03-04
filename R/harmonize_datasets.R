@@ -1,9 +1,11 @@
+#' @export
 comple <- function(allele){
 
   ifelse(allele == "A","T", ifelse(allele == "T","A", ifelse(allele == "G","C", ifelse(allele == "C","G", allele)) ))
 
 }
 
+#' @export
 # facilitate harmonization of two GWAS datasets
 align_data <- function(dat1,
                       dat2,

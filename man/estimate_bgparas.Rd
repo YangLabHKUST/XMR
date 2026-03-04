@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimate_bgparas.R
 \name{estimate_bgparas}
 \alias{estimate_bgparas}
-\title{Estimate XMAP background parameters via two-stage bivariate LDSC}
+\title{Estimate XMR background parameters via two-stage bivariate LDSC}
 \usage{
 estimate_bgparas(
   ldscore0,
@@ -40,5 +40,5 @@ A data.frame with 6 rows, one per trait-population pair,
   containing columns: trait1, trait2, pop1, pop2, omega11, omega12, omega22, c1, c12, c2.
 }
 \description{
-Estimate XMAP background parameters via two-stage bivariate LDSC
+Estimate XMR background parameters via two-stage bivariate LDSC
 }

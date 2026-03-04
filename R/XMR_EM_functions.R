@@ -1,3 +1,4 @@
+#' @export
 # The function for calculating evidence lower bound
 cal_elbo <- function(A, pi0, m, Pi, S, inv.S, Var, inv.Var, muj, Sigmaj, hat.b, C_1, C_2, Var_q){
   
@@ -30,7 +31,7 @@ cal_elbo <- function(A, pi0, m, Pi, S, inv.S, Var, inv.Var, muj, Sigmaj, hat.b, 
   
 }
 
-
+#' @export
 XMR_EM_func <- function(data = NULL,
                         beta=NULL,
                         SigmaX = NULL,
