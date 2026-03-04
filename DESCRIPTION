@@ -14,11 +14,11 @@ Imports:
     stats,
     mvtnorm,
     dplyr,
+    reshape2,
     glmnet
 Suggests:
     MASS,
     data.table,
-    reshape2,
     magrittr,
     XMAP,
     MRAPSS,
