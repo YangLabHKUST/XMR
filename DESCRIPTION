@@ -1,0 +1,35 @@
+Package: XMR
+Title: Cross-Population Mendelian Randomization
+Version: 0.1.0
+Authors@R: person("Xinrui", "Huang", role = c("aut", "cre"),
+                  email = "xhuangcn@connect.ust.hk")
+Description: Implements the XMR method for cross-population MR analysis.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 4.2.0)
+Imports:
+    Matrix,
+    expm,
+    stats,
+    mvtnorm,
+    dplyr,
+    glmnet
+Suggests:
+    MASS,
+    data.table,
+    reshape2,
+    magrittr,
+    XMAP,
+    MRAPSS,
+    doParallel,
+    readr,
+    TwoSampleMR,
+    mr.divw,
+    cause,
+    MRMix,
+    MRPRESSO,
+    robustbase,
+    MRcML,
+    TEMR
+RoxygenNote: 7.3.2
