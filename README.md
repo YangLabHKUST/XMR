@@ -9,12 +9,11 @@ XMR further corrects bias introduced by IV selection and LD clumping to reduce f
 
 <img width="2314" height="1484" alt="649dc9cb-1" src="https://github.com/user-attachments/assets/1c59e233-90c5-4ffc-b6dc-a6c8db2b2335" />
 
-**Overview of the XMR method.** XMR estimates the causal effect $\beta$ between exposure $X_2$ and outcome $Y_2$ in a small-sample population by leveraging data on the same exposure $X_1$ from a large-sample population. The method involves several key elements:
-**(A)** IVs are selected from the large-sample population ($X_1$) to improve power compared to the limited IVs available from the small-sample population ($X_2$). The distributions of observed $-\log_{10}(p)$ values for SNP–exposure associations across chromosomes are shown.
-**(B)** The XMR model diagram. Arrowed lines represent directed effects. The blue dashed line indicates the correlation between $X_1$ and $X_2$.
+**Overview of the XMR method.** XMR estimates the causal effect $\beta$ between exposure $X\_2$ and outcome $Y\_2$ in a small-sample population by leveraging data on the same exposure $X\_1$ from a large-sample population. The method involves several key elements:
+**(A)** IVs are selected from the large-sample population ($X\_1$) to improve power compared to the limited IVs available from the small-sample population ($X\_2$). The distributions of observed $-\log\_{10}(p)$ values for SNP–exposure associations across chromosomes are shown.
+**(B)** The XMR model diagram. Arrowed lines represent directed effects. The blue dashed line indicates the correlation between $X\_1$ and $X\_2$.
 **(C)** Selection bias and confounding factors contribute to the observed SNP–trait associations.
-**(D)** An illustrative example of causal inference between SHBG (sex hormone-binding globulin) and T2D (type 2 diabetes) in an African population, using conventional two-sample MR methods (left) and XMR (right). The estimated causal effect is shown as a red line, with the 95% confidence interval shaded in transparent red. Triangles represent observed SNP effect sizes ($\hat{\gamma}\_{2,j}$ and $\hat{\Gamma}\_{2,j}$), colored by their posterior probability of IV validity ($Z_j = 1$ in dark blue; $Z_j = 0$ in light blue).
-*Figure created with [BioRender.com](https://www.biorender.com/), with permission.*
+**(D)** An illustrative example of causal inference between SHBG (sex hormone-binding globulin) and T2D (type 2 diabetes) in an African population, using conventional two-sample MR methods (left) and XMR (right). The estimated causal effect is shown as a red line, with the 95% confidence interval shaded in transparent red. Triangles represent observed SNP effect sizes ($\hat{\gamma}\_{2,j}$ and $\hat{\Gamma}\_{2,j}$), colored by their posterior probability of IV validity ($Z\_j = 1$ in dark blue; $Z\_j = 0$ in light blue).
 
 ## Installation
 
