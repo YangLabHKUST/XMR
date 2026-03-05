@@ -93,6 +93,49 @@ Both can be estimated using bivariate LD score regression.
 
 ## Reproducibility
 
+We applied XMR and 15 existing summary-level MR methods to (1) simulations; (2) test the causal effects of 35 traits on 2 negative control outcomes (Skin tanning ability, Natural hair color) in Africans and Central/South Asians; (3) infer causal relationships in 3 underrepresented populations: East Asians, Central/South Asians and Africans. We provide [source codes](reproduce/) for replicating the simulation and real data analysis results in the XMR paper.
+
+
+## Setup
+
+### 1. Clone this repository
+```bash
+git clone https://github.com/YangLabHKUST/XMR_reproduce.git
+cd XMR_reproduce
+```
+
+### 2. Download data
+Download `XMR_reproduce_data.tar.gz` from [Zenodo](https://doi.org/xxx) 
+and extract it into the repository root:
+```bash
+tar xzvf XMR_reproduce_data.tar.gz
+```
+
+After extraction, your directory should look like:
+```
+XMR_reproduce/          ← this is the root directory
+├── nc/
+│   ├── 1kg_pops/       ← (from data archive)
+│   ├── raw_data/       ← (from data archive)
+│   ├── formatted_data/ ← (from data archive)
+│   ├── 01_format_data.R
+│   └── ...
+├── real_data_EAS/
+│   └── ...
+└── sim/
+    └── ...
+```
+
+### 3. Run the analysis
+All scripts assume the **working directory is the repository root** (`XMR_reproduce/`).
+
+```r
+# In R
+setwd("/path/to/XMR_reproduce")  # set to your local path
+source("nc/01_format_data.R")
+```
+
+
 
 
 ## Reference
