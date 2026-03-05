@@ -145,8 +145,8 @@ cd XMR_reproduce
 
 ```
 XMR_reproduce/
-├── nc/                  # Negative-control analysis (AFR & CSA; coming soon)
-├── real_data_CSA_AFR/   # Real data analysis in CSA & AFR
+├── nc/                  # Negative-control analysis in AFR & CSA
+├── real_data_CSA_AFR/   # Real data analysis in CSA & AFR (coming soon)
 ├── real_data_EAS/       # Real data analysis in EAS
 └── sim/                 # Simulations
 ```
