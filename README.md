@@ -187,7 +187,7 @@ Each archive preserves the directory structure and will merge into existing dire
 
 The following large reference files may not be included in the archives due to size. Please download them manually:
 
-- **1000 Genomes PLINK files**: download from [link] and place in `nc/1kg_pops/`
+- **1000 Genomes PLINK files**: download and place in `nc/1kg_pops/`; refer to [prepare_1kg_reference.sh](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/prepare_1kg_reference.sh)
 - **PLINK software**: download from [https://www.cog-genomics.org/plink2](https://www.cog-genomics.org/plink2)
 
 
