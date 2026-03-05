@@ -93,9 +93,53 @@ Both can be estimated using bivariate LD score regression.
 
 ## Reproducibility
 
-We applied XMR and 15 existing summary-level MR methods to (1) simulations; (2) test the causal effects of 35 traits on 2 negative control outcomes (Skin tanning ability, Natural hair color) in Africans (AFR) and Central/South Asians (CSA); (3) infer causal relationships in 3 underrepresented populations: East Asians, Central/South Asians and Africans. We provide [source codes](reproduce/) for replicating the simulation and real data analysis results in the XMR paper.
+We applied XMR and 15 existing summary-level MR methods to
+- (1) simulations;
+- (2) test the causal effects of 35 traits on 2 negative control outcomes (Skin tanning ability, Natural hair color) in Africans (AFR) and Central/South Asians (CSA);
+- (3) infer causal relationships in 3 underrepresented populations: East Asians, Central/South Asians and Africans.
+
+We provide [source codes](https://github.com/YangLabHKUST/XMR_reproduce) for replicating the simulation and real data analysis results in the XMR paper.
+
+**Simulation:**
+
+[Experiments and visualization](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/sim/code/simulation_reproduce_plot.ipynb).
+
+**Negative-control studies:**
+[Format data](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/format_data.ipynb);
+[XMR in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_XMR_AFR.ipynb);
+[XMR in CSA](http://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_XMR_CSA.ipynb);
+[Other methods in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_other_AFR.ipynb);
+[Other methods in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_other_CSA.ipynb);
+[Visualization](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/nc-plot.ipynb).
+
+**Real-data analysis for EAS:**
+[Format data](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/format_data.ipynb);
+[XMR in BBJ](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_XMR_BBJ.ipynb); [XMR in TPMI](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_XMR_TPMI.ipynb);
+[ ]();
+[ ]();
+[ ]();
+[ ]().
+
+**Real-data analysis for CSA:**
+Coming soon
+[ ]();
+[ ]();
+[ ]();
+[ ]();
+[ ]();
+[ ]().
+
+**Real-data analysis for AFR:**
+Coming soon
+[ ]();
+[ ]();
+[ ]();
+[ ]();
+[ ]();
+[ ]().
 
 
+We have also released data and results related to the abbove experiments. Follow the below setup for reproduction:
 ### Setup
 
 #### 1. Clone this repository
@@ -139,13 +183,10 @@ The data files will be automatically merged into the existing code directories.
 
 #### 4. External resources (download separately)
 
-The following large reference files are not included in the 
-archives. Please download them manually:
+The following large reference files may not be included in the archives due to size. Please download them manually:
 
-- **1000 Genomes PLINK files**: download from [link] 
-  and place in `nc/1kg_pops/`
-- **PLINK software**: download from 
-  [https://www.cog-genomics.org/plink2](https://www.cog-genomics.org/plink2)
+- **1000 Genomes PLINK files**: download from [link] and place in `nc/1kg_pops/`
+- **PLINK software**: download from [https://www.cog-genomics.org/plink2](https://www.cog-genomics.org/plink2)
 
 
 #### 5. Run the analysis
@@ -155,6 +196,24 @@ All scripts assume the **working directory is the repository root** (`XMR_reprod
 # In R
 setwd("/path/to/XMR_reproduce")  # set to your local path
 source("nc/format_data.R")
+```
+
+To run the analysis for XMR and 15 compared methods, you need to install the corresponding packages first:
+
+```r
+# In R
+#install.packages("devtools") #install.packages("remotes")
+devtools::install_github("YangLabHKUST/XMAP")
+devtools::install_github("hhoulei/TEMR")
+devtools::install_github("YangLabHKUST/MR-APSS")
+remotes::install_github("MRCIEU/TwoSampleMR")
+devtools::install_github("jean997/cause@v1.2.0")
+install_github("tye27/mr.divw")
+devtools::install_github("gqi/MRMix")
+devtools::install_github("xue-hr/MRcML")
+devtools::install_github("rondolab/MR-PRESSO")
+install.packages("MendelianRandomization")
+install.packages(“robustbase”)
 ```
 
 
