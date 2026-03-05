@@ -169,16 +169,16 @@ Alternatively, you can **skip the raw data step** and start directly from our pr
 
 | File | Size | Link |
 |------|------|------|
-| `sim_data.tar.gz` | ~28 MB | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18872086.svg)](https://doi.org/10.5281/zenodo.18872086) |
-| `nc_data.tar.gz` | ~X GB | [Google Drive](link) |
-| `real_data_EAS_data.tar.gz` | ~X GB | [Google Drive](link) |
-| `real_data_CSA_AFR_data.tar.gz` | ~X GB | Coming soon |
+| `sim_data.tar.gz` | ~27 MB | [Google Drive](https://drive.google.com/file/d/1R90uePMEcbXZdMVidS0dkGAnGtomzAC5/view?usp=drive_link)|
+| `nc_data.tar.gz` | ~6.29 GB | [Google Drive](https://drive.google.com/file/d/1yZxyfZkUOYwtLGdDnxrHkjhi-l2iE6J0/view?usp=drive_link) |
+| `real_data_EAS.tar.gz` | ~5.42 GB | [Google Drive](https://drive.google.com/file/d/1yN3BIDeGAUPE4hCKU0gAN1f8ZdqyB2pS/view?usp=drive_link) |
+| `real_data_CSA_AFR.tar.gz` | ~X GB | Coming soon |
 
 ```bash
 tar xzvf sim_data.tar.gz
 tar xzvf nc_data.tar.gz
-tar xzvf real_data_EAS_data.tar.gz
-tar xzvf real_data_CSA_AFR_data.tar.gz
+tar xzvf real_data_EAS.tar.gz
+tar xzvf real_data_CSA_AFR.tar.gz
 ```
 
 Each archive preserves the directory structure and will merge into existing directories automatically.
