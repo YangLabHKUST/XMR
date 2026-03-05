@@ -94,17 +94,17 @@ Both can be estimated using bivariate LD score regression.
 ## Reproducibility
 
 We applied XMR and 15 existing summary-level MR methods to
-- (1) simulations;
-- (2) test the causal effects of 35 traits on 2 negative control outcomes (Skin tanning ability, Natural hair color) in Africans (AFR) and Central/South Asians (CSA);
-- (3) infer causal relationships in 3 underrepresented populations: East Asians, Central/South Asians and Africans.
+- simulations;
+- test the causal effects of 35 traits on 2 negative control outcomes (Skin tanning ability, Natural hair color) in Africans (AFR) and Central/South Asians (CSA);
+- infer causal relationships in 3 underrepresented populations: East Asians, Central/South Asians and Africans.
 
 We provide [source codes](https://github.com/YangLabHKUST/XMR_reproduce) for replicating the simulation and real data analysis results in the XMR paper.
 
 **Simulation:**
-
 [Experiments and visualization](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/sim/code/simulation_reproduce_plot.ipynb).
 
 **Negative-control studies:**
+
 [Format data](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/format_data.ipynb);
 [XMR in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_XMR_AFR.ipynb);
 [XMR in CSA](http://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_XMR_CSA.ipynb);
@@ -113,30 +113,19 @@ We provide [source codes](https://github.com/YangLabHKUST/XMR_reproduce) for rep
 [Visualization](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/nc-plot.ipynb).
 
 **Real-data analysis for EAS:**
+
 [Format data](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/format_data.ipynb);
-[XMR in BBJ](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_XMR_BBJ.ipynb); [XMR in TPMI](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_XMR_TPMI.ipynb);
-[ ]();
-[ ]();
-[ ]();
-[ ]().
+[XMR in BBJ](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_XMR_BBJ.ipynb); 
+[XMR in TPMI](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_XMR_TPMI.ipynb);
+[Other methods in BBJ](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_other_BBJ.ipynb);
+[Other methods in TPMI](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_other_TPMI.ipynb);
+[Visualization](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/EAS-plot.ipynb).
 
 **Real-data analysis for CSA:**
 Coming soon
-[ ]();
-[ ]();
-[ ]();
-[ ]();
-[ ]();
-[ ]().
 
 **Real-data analysis for AFR:**
 Coming soon
-[ ]();
-[ ]();
-[ ]();
-[ ]();
-[ ]();
-[ ]().
 
 
 We have also released data and results related to the abbove experiments. Follow the below setup for reproduction:
