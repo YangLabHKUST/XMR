@@ -94,12 +94,13 @@ Both can be estimated using bivariate LD score regression.
 
 ## Reproducibility
 
-We applied XMR and 15 existing summary-level MR methods to:
-- **Simulations**
-- **Negative-control studies**: testing the causal effects of 35 traits on 2 negative-control outcomes (skin tanning ability, natural hair color) in Africans (AFR) and Central/South Asians (CSA)
-- **Real-data analysis**: inferring causal relationships in 3 underrepresented populations — East Asians (EAS), Central/South Asians (CSA), and Africans (AFR)
+We applied XMR and 15 existing summary-level MR methods across three key domains:
+- **Simulations**: evaluating method performance under various scenarios.
+- **Negative-control studies**: testing the causal effects of 35 traits on 2 negative-control outcomes (skin tanning ability, natural hair color) in Africans (AFR) and Central/South Asians (CSA).
+- **Real-data analysis**: inferring causal relationships in 3 underrepresented populations — East Asians (EAS), Central/South Asians (CSA), and Africans (AFR).
 
-Source code and data for reproducing all results are available at [YangLabHKUST/XMR_reproduce](https://github.com/YangLabHKUST/XMR_reproduce).
+Source code and data for reproducing all results are available at [YangLabHKUST/XMR_reproduce](https://github.com/YangLabHKUST/XMR_reproduce). 
+The XMR execution scripts provided below feature a parallelized framework designed to efficiently analyze multiple trait pairs simultaneously.
 
 **Simulations:**
 
