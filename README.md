@@ -211,12 +211,12 @@ devtools::install_github("hhoulei/TEMR")
 devtools::install_github("YangLabHKUST/MR-APSS")
 remotes::install_github("MRCIEU/TwoSampleMR")
 devtools::install_github("jean997/cause@v1.2.0")
-install_github("tye27/mr.divw")
+devtools::install_github("tye27/mr.divw")
 devtools::install_github("gqi/MRMix")
 devtools::install_github("xue-hr/MRcML")
 devtools::install_github("rondolab/MR-PRESSO")
 install.packages("MendelianRandomization")
-install.packages(“robustbase”)
+install.packages("robustbase")
 ```
 
 
