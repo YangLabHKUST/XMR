@@ -231,7 +231,8 @@ install.packages("robustbase")
 
 ## Reference
 
-Xinrui Huang, Zitong Chao, Zhiwei Wang, Xianghong Hu, and Can Yang. *XMR: A cross-population Mendelian randomization method for causal inference using genome-wide summary statistics.* 2026.
+Xinrui Huang, Zitong Chao, Zhiwei Wang, Xianghong Hu, and Can Yang. *XMR: A cross-population Mendelian randomization method for causal inference using genome-wide summary statistics.* medRxiv, 2026. DOI: [10.64898/2026.03.10.26348003](https://www.medrxiv.org/content/10.64898/2026.03.10.26348003v1)
+
 
 ## Contact
 
