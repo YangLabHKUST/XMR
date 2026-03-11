@@ -124,10 +124,17 @@ The XMR execution scripts provided below feature a parallelized framework design
 [Other methods in TPMI](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_other_TPMI.ipynb) |
 [Visualization](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/EAS-plot.ipynb)
 
-**Real-data analysis for CSA:** Coming soon
+**Real-data analysis for CSA and AFR:** 
 
-**Real-data analysis for AFR:** Coming soon
-
+[Format data](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/format_data.ipynb) |
+[XMR in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/CSA/run_XMR_CSA.ipynb) |
+[Other methods in CSA](http://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/CSA/run_other_CSA.ipynb) |
+[Visualization in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/CSA-plot.ipynb)
+[XMR in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR/run_XMR_AFR.ipynb) |
+[Other methods in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR/run_other_AFR.ipynb) |
+[Visualization in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR-plot.ipynb)
+[Case study across 4 populations: SHBG to T2D](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_in_EAS.ipynb)
+[Visualization: case study](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_plot.ipynb)
 
 ### Setup
 
