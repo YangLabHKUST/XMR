@@ -130,11 +130,13 @@ The XMR execution scripts provided below feature a parallelized framework design
 [XMR in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/CSA/run_XMR_CSA.ipynb) |
 [Other methods in CSA](http://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/CSA/run_other_CSA.ipynb) |
 [Visualization in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/CSA-plot.ipynb)
+
 [XMR in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR/run_XMR_AFR.ipynb) |
 [Other methods in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR/run_other_AFR.ipynb) |
 [Visualization in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR-plot.ipynb)
-[Case study across 4 populations: SHBG to T2D](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_in_EAS.ipynb)
-[Visualization: case study](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_plot.ipynb)
+
+[Case study in EAS: SHBG to T2D](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_in_EAS.ipynb)|
+[Visualization: case study across 4 populations](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_plot.ipynb)
 
 ### Setup
 
