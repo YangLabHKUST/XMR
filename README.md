@@ -135,7 +135,7 @@ The XMR execution scripts provided below feature a parallelized framework design
 [Other methods in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR/run_other_AFR.ipynb) |
 [Visualization in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR-plot.ipynb)
 
-[Case study in EAS: SHBG to T2D](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_in_EAS.ipynb)|
+[Case study in EAS: SHBG to T2D](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_in_EAS.ipynb) |
 [Visualization: case study across 4 populations](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_plot.ipynb)
 
 ### Setup
