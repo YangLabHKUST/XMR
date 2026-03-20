@@ -22,7 +22,7 @@ XMR further corrects bias introduced by IV selection and LD clumping to reduce f
 devtools::install_github("YangLabHKUST/XMR")
 ```
 
-Typical installation time: < 5 minutes.
+Typical installation time: < 5 minutes. Required time on a standard desktop computer should be comparable.
 
 ## Usage
 
@@ -114,7 +114,7 @@ Both can be estimated using bivariate LD score regression.
 For the LDLC → MI example, the expected output is:
 - `beta` = 0.1948, `beta.se`= 0.0384, `beta.pvalue` = 3.7994e-07, `nIV` = 387, `nvalid` = 123.8297
 
-**Expected run time**: ~1 minute on an Intel® Xeon® Gold 6152 CPU @ 2.10 GHz.
+**Expected run time**: ~1 minute on an Intel® Xeon® Gold 6152 CPU @ 2.10 GHz. Run time on a standard desktop computer should be comparable.
 
 
 ## Reproducibility
