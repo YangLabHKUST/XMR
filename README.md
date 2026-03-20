@@ -15,12 +15,29 @@ XMR further corrects bias introduced by IV selection and LD clumping to reduce f
 **(C)** Selection bias and confounding factors contribute to the observed SNP–trait associations.
 **(D)** An illustrative example of causal inference between SHBG (sex hormone-binding globulin) and T2D (type 2 diabetes) in an African population, using conventional two-sample MR methods (left) and XMR (right). The estimated causal effect is shown as a red line, with the 95% confidence interval shaded in transparent red. Triangles represent observed SNP effect sizes ($\hat{\gamma}\_{2,j}$ and $\hat{\Gamma}\_{2,j}$), colored by their posterior probability of IV validity ($Z\_j = 1$ in dark blue; $Z\_j = 0$ in light blue).
 
+## System Requirements
+
+### Software dependencies
+- R (>= 4.2.0)
+- R packages: Matrix, expm, stats, mvtnorm, dplyr, reshape2, glmnet, MASS, data.table, readr, magrittr, doParallel, XMAP, MRAPSS
+
+### Tested on
+- Intel® Xeon® CPU E5-2699 v4 @ 2.20 GHz
+- R 4.2.2
+
+### Hardware
+- No non-standard hardware required.
+- A standard desktop computer is sufficient.
+
+
 ## Installation
 
 ```r
 # install.packages("devtools")
 devtools::install_github("YangLabHKUST/XMR")
 ```
+
+Typical installation time: < 5 minutes.
 
 ## Usage
 
@@ -90,6 +107,30 @@ The input `data` should be a data.frame containing the following columns:
 - **Omega matrix**: A 3×3 variance–covariance matrix of polygenic effects.
 
 Both can be estimated using bivariate LD score regression.
+
+### Expected output
+
+`XMR_res` is a list containing:
+- `exposure`: phecode of the exposure
+- `outcome`: phecode of the outcome
+- `beta`: estimated causal effect of the exposure on the outcome
+- `beta.se`: standard error of the causal effect estimate
+- `beta.pvalue`: p-value for the causal effect
+- `tau.sq`: estimated variance of the pleiotropic effect
+- `sigmax11`, `sigmax12`, `sigmax22`: estimated elements of the SNP–trait covariance matrix
+- `nIV`: number of IVs used
+- `IVsignal.sum`: total IV strength
+- `nvalid`: estimated number of valid IVs
+- `pi0`: estimated proportion of valid IVs
+- `Threshold`: IV selection threshold
+- `exp_N1`: sample size of the exposure from the auxiliary population
+- `exp_N2`: sample size of the exposure from the target population
+- `modified_threshold`: modified threshold to correct selection bias
+
+For the LDLC → MI example, the expected output is:
+- `beta` = 0.1948, `beta.se`= 0.0384, `beta.pvalue` = 3.7994e-07, `nIV` = 387, `nvalid` = 123.8297
+
+**Expected run time**: ~1 minute on an Intel® Xeon® Gold 6152 CPU @ 2.10 GHz.
 
 
 ## Reproducibility
