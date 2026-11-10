@@ -91,7 +91,6 @@ Both can be estimated using bivariate LD score regression.
 
 ### Expected output
 
--
 `XMR_res` is a list containing:
 - `exposure`: name of the exposure
 - `outcome`: name of the outcome
