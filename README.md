@@ -10,15 +10,10 @@ XMR further corrects bias introduced by IV selection and LD clumping to reduce f
 [![Overview of the XMR method](man/figures/method_overview.png)](https://github.com/user-attachments/files/34630693/method_overview.pdf)
 
 **Overview of the XMR method.** XMR estimates the causal effect $`\beta`$ of exposure $`X_2`$ on outcome $`Y_2`$ in a smaller target population by leveraging GWAS data on the same exposure, $`X_1`$, from a larger auxiliary population. Panels A–C are schematic illustrations; panel D shows fitted results from simulated data.
-
 **(A)** XMR selects candidate IVs using the auxiliary-population exposure GWAS, as indicated by the green check mark. The schematic chromosome plots illustrate how greater precision can allow more SNPs to pass a fixed significance threshold (dashed horizontal lines), potentially increasing power.
-
 **(B)** Diagram of the XMR model. Arrows indicate effects, $`U`$ denotes unmeasured confounding, and $`\gamma_{1,j}`$ and $`\gamma_{2,j}`$ denote population-specific SNP–exposure effects. The blue dashed line represents the cross-population genetic correlation.
-
 **(C)** Selection bias and background correlation. The Gaussian schematic (left) shows the auxiliary exposure Z-score selection thresholds (dashed lines) and retained regions (blue tails), illustrating the IV-selection event on which XMR conditions its likelihood. The heatmap (right) illustrates potential background exposure–outcome correlations due to correlated pleiotropy or sample structure; columns denote exposures, rows denote outcomes, and colors indicate illustrative correlations.
-
 **(D)** MR-APSS, representing two-sample MR (left), and XMR (right), fitted to the same simulated dataset ($`N_{\mathrm{EUR}} = 40{,}000`$, $`N_{\mathrm{EAS}} = 6{,}000`$, $`\rho = 0.8`$, and $`\beta = 0.3`$). Triangles show selected SNPs’ target-population effects $`(\hat{\gamma}_{2,j}, \hat{\Gamma}_{2,j})`$, with gray error bars indicating $`\pm 1`$ SE. Darker blue indicates a higher posterior probability of foreground membership under the fitted model. Triangle size represents $`-\log_{10}(P)`$, using target-exposure P values for MR-APSS and FEMA exposure P values for XMR. Red lines and shaded regions show the causal effect estimates and their 95% confidence intervals.
-
 Schematic elements were created with BioRender.com, with permission.
 
 ## Installation
