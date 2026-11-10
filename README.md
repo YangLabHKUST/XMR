@@ -31,7 +31,7 @@ We illustrate how to perform cross-population MR analysis using XMR with a real-
 
 The XMR analysis comprises two main steps:
 
-- **Step 1:** Prepare data and estimate background parameters (the C matrix and Omega matrix via cross-population LD score regression).
+- **Step 1:** Prepare data, estimate background parameters (the C and Omega matrices via cross-population LD score regression), and select and LD-clump candidate IVs.
 - **Step 2:** Fit XMR for causal inference.
 
 For a step-by-step walkthrough, see the [XMR tutorial: causal effect of LDLC on MI](https://htmlpreview.github.io/?https://github.com/YangLabHKUST/XMR/blob/main/XMR_tutorial_LDLC_MI.html) ([download link](https://github.com/YangLabHKUST/XMR/blob/main/XMR_tutorial_LDLC_MI.html)).
@@ -44,15 +44,8 @@ library(XMR)
 exposure <- "LDLC"
 outcome  <- "MI"
 
-# Sample sizes
-N1 <- 343621  # EUR (auxiliary population)
-N2 <- 72866   # EAS (target population)
-
-# Modified IV selection threshold for correction of selection bias
-threshold <- 5e-05 # IV selection threshold
-t0 <- abs(qnorm(threshold / 2))
-dt <- 0.13 / (sqrt(N2 / N1))
-modified_threshold <- 2 * (1 - pnorm(abs(t0 + dt)))
+# Auxiliary-exposure P-value threshold for IV selection
+threshold <- 5e-05
 
 # Load example data
 data(C)
@@ -62,9 +55,11 @@ data(clumped_data) # after IV selection and LD clumping
 # Fit XMR
 XMR_res <- fit_XMR(
   data = clumped_data,
+  exposure = exposure,
+  outcome = outcome,
   C = C,
   Omega0 = Omega,
-  Threshold = modified_threshold,
+  Threshold = threshold,
   tol1 = 1e-07,
   tol2 = 1e-07,
   min_thres = 1e-2
@@ -83,9 +78,9 @@ The input `data` should be a data.frame containing the following columns:
 | `se.exp.pop1` | Standard error of `b.exp.pop1` |
 | `se.exp.pop2` | Standard error of `b.exp.pop2` |
 | `se.out.pop2` | Standard error of `b.out.pop2` |
-| `L2.pop1` | LD score in the auxiliary population; defaults to all ones if not provided (i.e., no LD correction) |
-| `L2.pop2` | LD score in the target population; defaults to all ones if not provided (i.e., no LD correction) |
-| `L12` | Cross-population LD score between pop1 and pop2; defaults to all ones if not provided (i.e., no LD correction) |
+| `L2.pop1` | LD score in the auxiliary population; defaults to all ones if not provided |
+| `L2.pop2` | LD score in the target population; defaults to all ones if not provided |
+| `L12` | Cross-population LD score between pop1 and pop2; defaults to all ones if not provided |
 
 ### Parameters related to confounding factors
 
@@ -96,24 +91,25 @@ Both can be estimated using bivariate LD score regression.
 
 ### Expected output
 
+-
 `XMR_res` is a list containing:
-- `exposure`: phecode of the exposure
-- `outcome`: phecode of the outcome
+- `exposure`: name of the exposure
+- `outcome`: name of the outcome
 - `beta`: estimated causal effect of the exposure on the outcome
 - `beta.se`: standard error of the causal effect estimate
 - `beta.pvalue`: p-value for the causal effect
-- `tau.sq`: estimated variance of the pleiotropic effect
-- `SigmaX`: estimated SNP–trait covariance matrix
-- `post`: posterior probabilities of IV validity for each SNP
-- `nIV`: number of IVs used
-- `nvalid`: estimated number of valid IVs
-- `pi0`: estimated proportion of valid IVs
-- `Threshold`: IV selection threshold
-- `fit1_elbos`, `fit2_elbos`: evidence lover bounds in the two stages
-- `fit1_likelis`, `fit2_likelis`: likelihoods in the two stages
+- `tau.sq`: estimated variance of uncorrelated pleiotropic effects
+- `SigmaX`: estimated covariance matrix of exposure effects in the foreground component
+- `post`: posterior quantities, including `post$Pi`, the posterior foreground-membership probabilities providing model-based support for each candidate IV's contribution to causal estimation
+- `nIV`: number of candidate IVs used
+- `nvalid`: model-estimated effective IV counts (`pi0 * nIV`)
+- `pi0`: estimated foreground proportion among selected candidate IVs
+- `Threshold`: auxiliary-exposure P-value threshold used for IV selection
+- `fit1_elbos`, `fit2_elbos`: evidence lower bounds in the two fitting stages
+- `fit1_likelis`, `fit2_likelis`: likelihoods in the two fitting stages
 
-For the LDLC → MI example, the expected output is:
-- `beta` = 0.1948, `beta.se`= 0.0384, `beta.pvalue` = 3.7994e-07, `nIV` = 387, `nvalid` = 123.8297
+For the LDLC → MI example, the expected output is approximately:
+- `beta` = 0.1830, `beta.se` = 0.0449, `beta.pvalue` = 4.5902e-05, `nIV` = 289, `nvalid` = 168.9770
 
 **Expected run time**: ~1 minute on an Intel® Xeon® Gold 6152 CPU @ 2.10 GHz. Run time on a standard desktop computer should be comparable.
 
