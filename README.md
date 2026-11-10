@@ -5,7 +5,7 @@
 XMR improves the power and robustness of causal inference in underrepresented (small-sample) populations by leveraging information from a large-sample auxiliary population. 
 Specifically, XMR decomposes the observed SNP–trait effects into true causal effects and confounding factors (e.g., pleiotropy, population structure) hidden in summary statistics. 
 By explicitly modelling the genetic correlation between two populations, XMR effectively borrows strength from the large-sample group. 
-XMR accounts for auxiliary-exposure IV selection in its likelihood.
+XMR further corrects bias introduced by IV selection and LD clumping to reduce false positive rates.
 
 <img width="2314" height="1484" alt="649dc9cb-1" src="https://github.com/user-attachments/assets/1c59e233-90c5-4ffc-b6dc-a6c8db2b2335" />
 
@@ -13,7 +13,7 @@ XMR accounts for auxiliary-exposure IV selection in its likelihood.
 **(A)** IVs are selected from the large-sample population ($X\_1$) to improve power compared to the limited IVs available from the small-sample population ($X\_2$). The distributions of observed $-\log\_{10}(p)$ values for SNP–exposure associations across chromosomes are shown.
 **(B)** The XMR model diagram. Arrowed lines represent directed effects. The blue dashed line indicates the correlation between $X\_1$ and $X\_2$.
 **(C)** Selection bias and confounding factors contribute to the observed SNP–trait associations.
-**(D)** An illustrative example of causal inference between SHBG (sex hormone-binding globulin) and T2D (type 2 diabetes) in an African population, using conventional two-sample MR methods (left) and XMR (right). The estimated causal effect is shown as a red line, with the 95% confidence interval shaded in transparent red. Triangles represent observed SNP effect sizes ($\hat{\gamma}\_{2,j}$ and $\hat{\Gamma}\_{2,j}$), colored by their posterior probability of foreground membership (IV contribution) ($Z\_j = 1$ in dark blue; $Z\_j = 0$ in light blue).
+**(D)** An illustrative example of causal inference between SHBG (sex hormone-binding globulin) and T2D (type 2 diabetes) in an African population, using conventional two-sample MR methods (left) and XMR (right). The estimated causal effect is shown as a red line, with the 95% confidence interval shaded in transparent red. Triangles represent observed SNP effect sizes ($\hat{\gamma}\_{2,j}$ and $\hat{\Gamma}\_{2,j}$), colored by their posterior probability of IV validity ($Z\_j = 1$ in dark blue; $Z\_j = 0$ in light blue).
 
 ## Installation
 
@@ -33,7 +33,7 @@ The XMR analysis comprises two main steps:
 - **Step 1:** Prepare data and estimate background parameters (the C matrix and Omega matrix via cross-population LD score regression).
 - **Step 2:** Fit XMR for causal inference.
 
-The [tutorial: causal effect of LDLC on MI](https://htmlpreview.github.io/?https://github.com/YangLabHKUST/XMR/blob/main/XMR_tutorial_LDLC_MI.html) ([download link](https://github.com/YangLabHKUST/XMR/blob/main/XMR_tutorial_LDLC_MI.html)) walks through data preparation, IV selection and model fitting, with code and example results. Its executable source is [`inst/tutorial/XMR_tutorial_LDLC_MI.Rmd`](inst/tutorial/XMR_tutorial_LDLC_MI.Rmd). A compact wrapper is available in [`inst/examples/workflow.R`](inst/examples/workflow.R).
+For a step-by-step walkthrough, see the [XMR tutorial: causal effect of LDLC on MI](https://htmlpreview.github.io/?https://github.com/YangLabHKUST/XMR/blob/main/XMR_tutorial_LDLC_MI.html) ([download link](https://github.com/YangLabHKUST/XMR/blob/main/XMR_tutorial_LDLC_MI.html)).
 
 For a quick start, you can skip Step 1 and proceed directly to Step 2 using the example data we have prepared.
 
@@ -43,8 +43,15 @@ library(XMR)
 exposure <- "LDLC"
 outcome  <- "MI"
 
-# Auxiliary-exposure IV selection threshold
-threshold <- 5e-05
+# Sample sizes
+N1 <- 343621  # EUR (auxiliary population)
+N2 <- 72866   # EAS (target population)
+
+# Modified IV selection threshold for correction of selection bias
+threshold <- 5e-05 # IV selection threshold
+t0 <- abs(qnorm(threshold / 2))
+dt <- 0.13 / (sqrt(N2 / N1))
+modified_threshold <- 2 * (1 - pnorm(abs(t0 + dt)))
 
 # Load example data
 data(C)
@@ -56,33 +63,12 @@ XMR_res <- fit_XMR(
   data = clumped_data,
   C = C,
   Omega0 = Omega,
-  Threshold = threshold,
+  Threshold = modified_threshold,
   tol1 = 1e-07,
   tol2 = 1e-07,
   min_thres = 1e-2
 )
 ```
-
-### Data preparation
-
-Use harmonized effects with aligned alleles and compatible exposure units in both populations. Estimate background parameters from genome-wide summary statistics, not only selected IVs. The default `estimate_bgparas(..., cross_intercept_zero = TRUE)` fixes cross-population intercepts to zero during the second LDSC stage while retaining the estimated marginal and within-population intercepts. Set `cross_intercept_zero = FALSE` to estimate cross-population intercepts without fixing them to zero.
-
-```r
-# ldscore0 and formatted GWAS files follow ?estimate_bgparas
-bg <- estimate_bgparas(ldscore0, exposure, outcome,
-                      pop_ref = "EUR", pop_target = "BBJ",
-                      gwas_dir = "formatted_data")
-matrices <- qc_bgparas(bg, exposure, outcome, "EUR", "BBJ")
-
-# harmonized_data contains aligned effects/SEs, auxiliary P values and LD scores.
-# bfile must be a TARGET-population PLINK reference prefix.
-ivs <- select_IVs(harmonized_data, Threshold = threshold,
-                 bfile = "reference/target", plink_bin = "/path/to/plink")
-fit <- fit_XMR(ivs, C = matrices$C, Omega0 = matrices$Omega0,
-              Threshold = threshold)
-```
-
-`select_IVs()` first selects `pval.exp.pop1 < Threshold`, then computes signed inverse-variance FEMA P values from the two exposure GWASs. FEMA P values prioritize eligible candidates during target-population LD clumping. It uses `MRAPSS::clump()` with a 10-Mb window and `r² = 0.001` by default, requiring a local target-population reference and PLINK executable. Use the auxiliary-exposure selection threshold as `Threshold` in `fit_XMR()`.
 
 ### Input data format
 
@@ -117,31 +103,155 @@ Both can be estimated using bivariate LD score regression.
 - `beta.pvalue`: p-value for the causal effect
 - `tau.sq`: estimated variance of the pleiotropic effect
 - `SigmaX`: estimated SNP–trait covariance matrix
-- `post`: posterior moments; `post$Pi` contains foreground-membership probabilities (support for IV contribution)
+- `post`: posterior probabilities of IV validity for each SNP
 - `nIV`: number of IVs used
-- `nvalid`: model-estimated effective IV counts (`pi0 * nIV`)
-- `pi0`: estimated foreground-mixture proportion among selected candidates
+- `nvalid`: estimated number of valid IVs
+- `pi0`: estimated proportion of valid IVs
 - `Threshold`: IV selection threshold
-- `fit1_elbos`, `fit2_elbos`: evidence lower bounds in the two stages
+- `fit1_elbos`, `fit2_elbos`: evidence lover bounds in the two stages
 - `fit1_likelis`, `fit2_likelis`: likelihoods in the two stages
 
-The bundled LDLC → MI example contains matching background matrices and clumped IV data.
+For the LDLC → MI example, the expected output is:
+- `beta` = 0.1948, `beta.se`= 0.0384, `beta.pvalue` = 3.7994e-07, `nIV` = 387, `nvalid` = 123.8297
 
-For the bundled example, the result is `nIV = 289`, `beta = 0.183`, `SE = 0.044908` and `P = 4.5902e-05`.
-Input checksums, settings and software versions are recorded in [`inst/extdata/LDLC_MI_example_provenance.json`](inst/extdata/LDLC_MI_example_provenance.json). Runtime depends on the number of IVs and convergence.
+**Expected run time**: ~1 minute on an Intel® Xeon® Gold 6152 CPU @ 2.10 GHz. Run time on a standard desktop computer should be comparable.
+
 
 ## Reproducibility
 
-Experiment scripts, data downloads and instructions are maintained in the companion repository [YangLabHKUST/XMR_reproduce](https://github.com/YangLabHKUST/XMR_reproduce).
+We applied XMR and 15 existing summary-level MR methods across three key domains:
+- **Simulations**: evaluating method performance under various scenarios.
+- **Negative-control studies**: testing the causal effects of 35 traits on 2 negative-control outcomes (skin tanning ability, natural hair color) in Africans (AFR) and Central/South Asians (CSA).
+- **Real-data analysis**: inferring causal relationships in 3 underrepresented populations — East Asians (EAS), Central/South Asians (CSA), and Africans (AFR).
 
-GWAS data sources are listed in the following tables:
+Source code and data for reproducing all results are available at [YangLabHKUST/XMR_reproduce](https://github.com/YangLabHKUST/XMR_reproduce). 
+The XMR execution scripts provided below feature a parallelized framework designed to efficiently analyze multiple trait pairs simultaneously.
 
-| Analysis | Data sources |
-|----------|--------------|
-| Negative-control studies | [nc_data_source.csv](nc_data_source.csv) |
-| East Asian populations | [real_data_EAS_data_source.csv](real_data_EAS_data_source.csv) |
-| African populations | [real_data_AFR_data_source.csv](real_data_AFR_data_source.csv) |
-| Central/South Asian populations | [real_data_CSA_data_source.csv](real_data_CSA_data_source.csv) |
+**Simulations:**
+
+[Experiments and visualization](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/sim/code/simulation_reproduce_plot.ipynb)
+
+**Negative-control studies:**
+
+[Format data](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/format_data.ipynb) |
+[XMR in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_XMR_AFR.ipynb) |
+[XMR in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_XMR_CSA.ipynb) |
+[Other methods in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_other_AFR.ipynb) |
+[Other methods in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_other_CSA.ipynb) |
+[Visualization](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/nc-plot.ipynb)
+
+**Real-data analysis for EAS:**
+
+[Format data](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/format_data.ipynb) |
+[XMR in BBJ](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_XMR_BBJ.ipynb) |
+[XMR in TPMI](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_XMR_TPMI.ipynb) |
+[Other methods in BBJ](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_other_BBJ.ipynb) |
+[Other methods in TPMI](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_other_TPMI.ipynb) |
+[Visualization](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/EAS-plot.ipynb)
+
+**Real-data analysis for CSA and AFR:** 
+
+[Format data](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/format_data.ipynb) |
+[XMR in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/CSA/run_XMR_CSA.ipynb) |
+[Other methods in CSA](http://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/CSA/run_other_CSA.ipynb) |
+[Visualization in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/CSA-plot.ipynb)
+
+[XMR in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR/run_XMR_AFR.ipynb) |
+[Other methods in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR/run_other_AFR.ipynb) |
+[Visualization in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR-plot.ipynb)
+
+[Case study in EAS: SHBG to T2D](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_in_EAS.ipynb) |
+[Visualization: case study across 4 populations](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_plot.ipynb)
+
+### Setup
+
+All data and results needed to reproduce the above experiments are publicly available.
+See **Step 2** for download links.
+Follow below steps for reproduction:
+
+#### 1. Clone this repository
+
+```bash
+git clone https://github.com/YangLabHKUST/XMR_reproduce.git
+cd XMR_reproduce
+```
+
+#### Directory structure
+
+```
+XMR_reproduce/
+├── nc/                  # Negative-control analysis in AFR & CSA
+├── real_data_CSA_AFR/   # Real data analysis in CSA & AFR
+├── real_data_EAS/       # Real data analysis in EAS
+└── sim/                 # Simulations
+```
+
+#### 2. Download data
+
+We provide archived files containing formatted data, LD score files, analysis results, and other files needed for reproduction.
+
+**Raw GWAS summary statistics** are not included due to their large size (~8–10 GB each).
+Data sources are listed in the following tables — download the raw files, find the target folder in the above directory, place them in the corresponding `raw_data/` folder, and run `format_data.ipynb` in the target folder to format:
+
+| Experiment | Data source table |
+|------------|-------------------|
+| Negative-control studies | [`nc_data_source.csv`](https://github.com/YangLabHKUST/XMR/blob/main/nc_data_source.csv) |
+| Real-data analysis (EAS) | [`real_data_EAS_data_source.csv`](https://github.com/YangLabHKUST/XMR/blob/main/real_data_EAS_data_source.csv) |
+| Real-data analysis (AFR) | [`real_data_AFR_data_source.csv`](https://github.com/YangLabHKUST/XMR/blob/main/real_data_AFR_data_source.csv) |
+| Real-data analysis (CSA) | [`real_data_CSA_data_source.csv`](https://github.com/YangLabHKUST/XMR/blob/main/real_data_CSA_data_source.csv) |
+
+Alternatively, you can **skip the raw data step** and start directly from our pre-formatted data by downloading the archives below. Then place them in the repository root and extract:
+
+| File | Size | Link |
+|------|------|------|
+| `sim_data.tar.gz` | ~28 MB | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18872086.svg)](https://doi.org/10.5281/zenodo.18872086)|
+| `nc_data.tar.gz` | ~6.8 GB | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18872963.svg)](https://doi.org/10.5281/zenodo.18872963) |
+| `real_data_EAS.tar.gz` | ~5.8 GB | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18874873.svg)](https://doi.org/10.5281/zenodo.18874873) |
+| `real_data_CSA_AFR.tar.gz` | ~4.2 GB | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18959822.svg)](https://doi.org/10.5281/zenodo.18959822) |
+
+```bash
+tar xzvf sim_data.tar.gz
+tar xzvf nc_data.tar.gz
+tar xzvf real_data_EAS.tar.gz
+tar xzvf real_data_CSA_AFR.tar.gz
+```
+
+Each archive preserves the directory structure and will merge into existing directories automatically.
+
+#### 3. External resources (download separately)
+
+The following large reference files may not be included in the archives due to size. Please download them manually:
+
+- **1000 Genomes PLINK files**: download and place in `nc/1kg_pops/`; refer to [prepare_1kg_reference.sh](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/prepare_1kg_reference.sh)
+- **PLINK software**: download from [https://www.cog-genomics.org/plink2](https://www.cog-genomics.org/plink2)
+
+
+#### 4. Run the analysis
+All scripts assume the **working directory is the repository root** (`XMR_reproduce/`).
+
+```r
+# In R
+setwd("/path/to/XMR_reproduce")  # set to your local path
+source("nc/code/run_XMR_AFR.R")
+```
+
+To run XMR and the 15 compared methods, install the required R packages first:
+
+```r
+# In R
+#install.packages("devtools") #install.packages("remotes")
+devtools::install_github("YangLabHKUST/XMAP")
+devtools::install_github("hhoulei/TEMR")
+devtools::install_github("YangLabHKUST/MR-APSS")
+remotes::install_github("MRCIEU/TwoSampleMR")
+devtools::install_github("jean997/cause@v1.2.0")
+devtools::install_github("tye27/mr.divw")
+devtools::install_github("gqi/MRMix")
+devtools::install_github("xue-hr/MRcML")
+devtools::install_github("rondolab/MR-PRESSO")
+install.packages("MendelianRandomization")
+install.packages("robustbase")
+```
 
 ## System Requirements
 
