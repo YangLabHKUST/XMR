@@ -7,13 +7,14 @@ Specifically, XMR decomposes the observed SNP–trait effects into true causal e
 By explicitly modelling the genetic correlation between two populations, XMR effectively borrows strength from the large-sample group. 
 XMR further corrects bias introduced by IV selection and LD clumping to reduce false positive rates.
 
-<img width="2314" height="1484" alt="649dc9cb-1" src="https://github.com/user-attachments/assets/1c59e233-90c5-4ffc-b6dc-a6c8db2b2335" />
+[method_overview.pdf](https://github.com/user-attachments/files/34630693/method_overview.pdf)
 
-**Overview of the XMR method.** XMR estimates the causal effect $\beta$ between exposure $X\_2$ and outcome $Y\_2$ in a small-sample population by leveraging data on the same exposure $X\_1$ from a large-sample population. The method involves several key elements:
-**(A)** IVs are selected from the large-sample population ($X\_1$) to improve power compared to the limited IVs available from the small-sample population ($X\_2$). The distributions of observed $-\log\_{10}(p)$ values for SNP–exposure associations across chromosomes are shown.
-**(B)** The XMR model diagram. Arrowed lines represent directed effects. The blue dashed line indicates the correlation between $X\_1$ and $X\_2$.
-**(C)** Selection bias and confounding factors contribute to the observed SNP–trait associations.
-**(D)** An illustrative example of causal inference between SHBG (sex hormone-binding globulin) and T2D (type 2 diabetes) in an African population, using conventional two-sample MR methods (left) and XMR (right). The estimated causal effect is shown as a red line, with the 95% confidence interval shaded in transparent red. Triangles represent observed SNP effect sizes ($\hat{\gamma}\_{2,j}$ and $\hat{\Gamma}\_{2,j}$), colored by their posterior probability of IV validity ($Z\_j = 1$ in dark blue; $Z\_j = 0$ in light blue).
+**Overview of the XMR method.** XMR estimates the causal effect $\beta$ of exposure $X_2$ on outcome $Y_2$ in a smaller target population by leveraging GWAS data on the same exposure, $X_1$, from a larger auxiliary population. Panels A–C are schematic illustrations; panel D shows fitted results from simulated data.
+**(A)** XMR selects candidate IVs using the auxiliary-population exposure GWAS, as indicated by the green check mark. The schematic chromosome plots illustrate how greater precision can allow more SNPs to pass a fixed significance threshold (dashed horizontal lines), potentially increasing power.
+**(B)** Diagram of the XMR model. Arrows indicate effects, $U$ denotes unmeasured confounding, and $\gamma_{1,j}$ and $\gamma_{2,j}$ denote population-specific SNP–exposure effects. The blue dashed line represents the cross-population genetic correlation.
+**(C)** Selection bias and background correlation. The Gaussian schematic (left) shows the auxiliary exposure Z-score selection thresholds (dashed lines) and retained regions (blue tails), illustrating the IV-selection event on which XMR conditions its likelihood. The heatmap (right) illustrates potential background exposure–outcome correlations due to correlated pleiotropy or sample structure; columns denote exposures, rows denote outcomes, and colors indicate illustrative correlations.
+**(D)** MR-APSS, representing two-sample MR (left), and XMR (right), fitted to the same simulated dataset ($N_{\mathrm{EUR}} = 40{,}000$, $N_{\mathrm{EAS}} = 6{,}000$, $\rho = 0.8$, and $\beta = 0.3$). Triangles show selected SNPs’ target-population effects $(\hat{\gamma}_{2,j}, \hat{\Gamma}_{2,j})$, with gray error bars indicating $\pm 1$ SE. Darker blue indicates a higher posterior probability of foreground membership under the fitted model. Triangle size represents $-\log_{10}(P)$, using target-exposure P values for MR-APSS and FEMA exposure P values for XMR. Red lines and shaded regions show the causal effect estimates and their 95% confidence intervals.
+Schematic elements were created with BioRender.com, with permission.
 
 ## Installation
 
