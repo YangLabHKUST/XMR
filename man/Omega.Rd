@@ -5,12 +5,17 @@
 \alias{Omega}
 \title{Omega matrix}
 \format{
-A 3x3 numeric matrix.
+A 3x3 numeric matrix ordered as EUR LDL-C, BBJ LDL-C and BBJ MI.
+}
+\source{
+Rebuilt by inst/tutorial/XMR_tutorial_LDLC_MI.Rmd; input checksums
+  and settings are recorded in inst/extdata/LDLC_MI_example_provenance.json.
 }
 \usage{
 Omega
 }
 \description{
-The estimated variance-covariance matrix of polygenic effects.
+Background genetic coefficients for the EUR-to-BBJ LDL-C to MI
+example, estimated jointly with the bundled C and processed by qc_bgparas().
 }
 \keyword{datasets}

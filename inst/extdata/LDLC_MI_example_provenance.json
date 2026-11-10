@@ -1,0 +1,78 @@
+{
+  "example": "LDLC to MI; EUR auxiliary, BBJ target",
+  "package_version": "0.1.0.9000",
+  "generated_utc": "2026-11-10 03:35:31 UTC",
+  "threshold": 5e-05,
+  "clump_kb": 10000,
+  "clump_r2": 0.001,
+  "cross_intercept_zero": true,
+  "background_correlation_truncation": 0.95,
+  "candidate_count": 6955,
+  "n_IV": 289,
+  "n_variables": 19,
+  "inputs": [
+    {
+      "file": "EUR_30780",
+      "md5": "10594a23a446c82d86e4de92170bc8a1"
+    },
+    {
+      "file": "BBJ_30780",
+      "md5": "78f3ce63121f8053b441bc55064c4ad1"
+    },
+    {
+      "file": "BBJ_411.2",
+      "md5": "7443abb180eddb06e57e485b7bf3055b"
+    },
+    {
+      "file": "LDscore_eas_brit_afr.txt",
+      "md5": "cd5390ea1136de210d6b184a65df1c49"
+    },
+    {
+      "file": "EAS_phase3_hg38_autosomes.bed",
+      "md5": "e402e34028d1d4952c7b6231a72190b4"
+    },
+    {
+      "file": "EAS_phase3_hg38_autosomes.bim",
+      "md5": "17d0c447834fe440ef278164746b3cab"
+    },
+    {
+      "file": "EAS_phase3_hg38_autosomes.fam",
+      "md5": "141d352acc8890e545ff462b3e05931d"
+    }
+  ],
+  "result": [
+    {
+      "Exposure": "LDLC",
+      "Outcome": "MI",
+      "beta": 0.183,
+      "SE": 0.0449079820256411,
+      "P": 4.5902e-05,
+      "nIV": 289,
+      "nvalid": 168.977044894396,
+      "pi0": 0.584695657074036,
+      "Threshold": 5e-05
+    }
+  ],
+  "convergence": [
+    {
+      "Stage": "Null fit: beta fixed at zero",
+      "Iterations": 26,
+      "Final_relative_change": 9.00503312458517e-08,
+      "Tolerance": 1e-07
+    },
+    {
+      "Stage": "Alternative fit: beta estimated",
+      "Iterations": 20,
+      "Final_relative_change": 9.21221473464287e-08,
+      "Tolerance": 1e-07
+    }
+  ],
+  "background_estimator": "XMR::estimate_bgparas(cross_intercept_zero = TRUE)",
+  "iv_selector": "XMR::select_IVs: auxiliary-P eligibility, signed FEMA, target LD",
+  "software": {
+    "XMR": "0.1.0.9000",
+    "XMAP": "1.0",
+    "MRAPSS": "0.0.0.9000",
+    "data.table": "1.17.8"
+  }
+}

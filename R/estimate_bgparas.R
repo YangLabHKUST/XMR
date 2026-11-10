@@ -10,7 +10,12 @@
 #' @param a1_col Character. Column name for allele1 in ldscore0. Default "allele1".
 #' @param z2_threshold Numeric. Z-squared threshold for filtering in stage 1. Default 30.
 #'
-#' @return A data.frame with 6 rows, one per trait-population pair,
+#' @param cross_intercept_zero Logical. Fix the cross-population LDSC intercept
+#'   to zero during stage 2. Default TRUE. Set FALSE
+#'   to estimate cross-population intercepts without fixing them to zero.
+#'   Within-population intercepts are still estimated in stage 1.
+#'
+#' @return A data.frame with up to 6 rows, one per successfully fitted trait-population pair,
 #'   containing columns: trait1, trait2, pop1, pop2, omega11, omega12, omega22, c1, c12, c2.
 #'
 #' @export
@@ -22,7 +27,13 @@ estimate_bgparas <- function(ldscore0,
                              gwas_dir = "./formatted_data",
                              snp_col = "rsid",
                              a1_col = "allele1",
-                             z2_threshold = 30) {
+                             z2_threshold = 30,
+                             cross_intercept_zero = TRUE) {
+
+    if (!is.logical(cross_intercept_zero) || length(cross_intercept_zero) != 1L ||
+        is.na(cross_intercept_zero)) {
+        stop("cross_intercept_zero must be TRUE or FALSE")
+    }
 
     # Build the 6 trait-population pairs:
     # all unique (unordered) pairs from {pop_ref_exposure, pop_target_exposure, pop_target_outcome}
@@ -89,7 +100,8 @@ estimate_bgparas <- function(ldscore0,
                 constrain_intercept = FALSE
             )
 
-            # Stage 2: fix intercepts, estimate slopes
+            # Stage 2: fix intercepts, estimate slopes. Cross-population intercepts
+            # are fixed at zero; retain estimated marginal intercepts.
             fit2 <- XMAP::estimate_gc(
                 data.frame(Z = z1, N = dat1_ldsc$N),
                 data.frame(Z = z2, N = dat2_ldsc$N),
@@ -97,7 +109,9 @@ estimate_bgparas <- function(ldscore0,
                 reg_w1 = w1, reg_w2 = w2,
                 reg_wx = sqrt(w1 * w2),
                 constrain_intercept = TRUE,
-                fit1$tau1$coefs[1], fit1$tau2$coefs[1], fit1$theta$coefs[1]
+                int1 = fit1$tau1$coefs[1],
+                int2 = fit1$tau2$coefs[1],
+                intx = if (cross_intercept_zero && p1 != p2) 0 else fit1$theta$coefs[1]
             )
 
             data.frame(trait1 = t1, trait2 = t2, pop1 = p1, pop2 = p2,

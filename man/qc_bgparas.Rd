@@ -15,7 +15,8 @@ qc_bgparas(
 }
 \arguments{
 \item{bgparas}{A \code{data.frame} returned by \code{estimate_bgparas()},
-containing columns \code{trait1}, \code{trait2}, \code{Omega12}, and \code{c12}.}
+containing columns \code{trait1}, \code{trait2}, \code{omega12}, and \code{c12}.
+The alternative column name \code{Omega12} is also accepted.}
 
 \item{exposure_code}{Character. Exposure trait code, e.g. \code{"30780"}.}
 

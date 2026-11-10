@@ -1,0 +1,321 @@
+---
+title: "LDL cholesterol and myocardial infarction: an XMR tutorial"
+subtitle: "European auxiliary population and BioBank Japan target population"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    theme: readable
+    highlight: textmate
+    self_contained: true
+    code_folding: show
+---
+
+<style>
+pre, pre code { white-space: pre; word-break: normal; overflow-wrap: normal; }
+pre { overflow-x: auto; }
+table.table { display: block; max-width: 100%; overflow-x: auto; }
+table.table th, table.table td { white-space: nowrap; }
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = TRUE,
+                     collapse = TRUE, comment = "#>")
+options(width = 100)
+suppressPackageStartupMessages({library(XMR); library(data.table)})
+data.table::setDTthreads(2)
+set.seed(1)
+```
+
+This tutorial illustrates XMR analysis through a case study of LDL cholesterol
+(LDL-C) and myocardial infarction (MI) in BioBank Japan (BBJ), using Europeans
+(EUR) as the auxiliary population.
+
+# Install and configure
+
+```{r installation, eval=FALSE}
+# install.packages("remotes")
+remotes::install_github("YangLabHKUST/XMR")
+```
+
+```{r configuration}
+library(XMR)
+library(data.table)
+
+exposure_code <- "30780"   # LDL cholesterol
+outcome_code <- "411.2"    # Myocardial infarction
+pop_ref <- "EUR"
+pop_target <- "BBJ"
+threshold <- 5e-5
+
+# Set these paths to your local input files and PLINK executable.
+gwas_dir <- "formatted_data"
+ldscore_file <- "LDscore_eas_brit_afr.txt"
+bfile <- "reference/EAS_phase3_hg38_autosomes"
+plink_bin <- "plink"
+```
+
+Use a PLINK reference panel matching the target population and genome build.
+This example uses an EAS hg38 reference.
+
+# Prepare GWAS data
+
+## Format raw GWAS data
+
+The data sources are the [BBJ GWAS downloads](https://pheweb.jp/downloads)
+(LDL-C and MI) and the [Neale Lab UK Biobank resource](http://www.nealelab.is/uk-biobank)
+(European LDL-C, code 30780).
+
+`MRAPSS::format_data()` standardizes raw GWAS summary statistics using the SNP
+identifier, effect and non-effect alleles, effect estimate, standard error,
+P value and sample size. The example below applies a minor-allele frequency
+threshold of 0.01.
+
+For the European LDL-C data, use the Neale Lab
+[variant annotation file](https://broad-ukb-sumstats-us-east-1.s3.amazonaws.com/round2/annotations/variants.tsv.bgz)
+to map variant identifiers to rs IDs. Extract it as `raw_data/EUR/variants.tsv`.
+The column mappings below correspond to the named GWAS files.
+
+Run this code when starting from raw GWAS downloads. If you are using the
+provided formatted files, continue with **Load formatted data**.
+
+```{r raw-formatting, eval=FALSE}
+library(data.table)
+library(MRAPSS)
+
+exp_BBJ <- MRAPSS::format_data(
+    fread("raw_data/BBJ/GWASsummary_LDLC_Japanese_SakaueKanai2020.auto.txt.gz"),
+    snp_col = "SNP", b_col = "BETA", se_col = "SE",
+    A1_col = "ALLELE1", A2_col = "ALLELE0", p_col = "P_BOLT_LMM_INF",
+    freq_col = "A1FREQ", n = 72866, min_freq = 0.01
+)
+out_BBJ <- MRAPSS::format_data(
+    fread("raw_data/BBJ/GWASsummary_MI_Japanese_SakaueKanai2020.auto.txt.gz"),
+    snp_col = "SNPID", b_col = "BETA", se_col = "SE",
+    A1_col = "Allele2", A2_col = "Allele1", p_col = "p.value",
+    freq_col = "AF_Allele2", n = 161206, min_freq = 0.01
+)
+variants <- fread("raw_data/EUR/variants.tsv")
+exp_EUR_raw <- fread("raw_data/EUR/30780.tsv")
+stopifnot(!anyDuplicated(variants$variant), !anyDuplicated(exp_EUR_raw$variant))
+exp_EUR_raw <- merge(exp_EUR_raw, variants[, .(variant, rsid, alt, ref)],
+                     by = "variant", sort = FALSE)
+exp_EUR <- MRAPSS::format_data(
+    exp_EUR_raw, snp_col = "rsid", b_col = "beta", se_col = "se",
+    A1_col = "alt", A2_col = "ref", p_col = "pval",
+    freq_col = "minor_AF", n_col = "n_complete_samples", min_freq = 0.01
+)
+dir.create(gwas_dir, recursive = TRUE, showWarnings = FALSE)
+fwrite(exp_EUR, file.path(gwas_dir, "EUR_30780"), sep = "\t")
+fwrite(exp_BBJ, file.path(gwas_dir, "BBJ_30780"), sep = "\t")
+fwrite(out_BBJ, file.path(gwas_dir, "BBJ_411.2"), sep = "\t")
+```
+
+## Load formatted data
+
+The expected files in `gwas_dir` are:
+
+| File | Population and trait | Role |
+|:--|:--|:--|
+| `EUR_30780` | European LDL-C | Auxiliary exposure |
+| `BBJ_30780` | BBJ LDL-C | Target exposure |
+| `BBJ_411.2` | BBJ MI | Target outcome |
+
+Each formatted GWAS file should contain `SNP`, `A1`, `A2`, `Z`, `N` and `P`.
+Use genome-wide summary statistics with consistent allele definitions and
+compatible exposure units across populations.
+
+```{r read-gwas}
+read_formatted <- function(filename) {
+    dat <- data.table::fread(file.path(gwas_dir, filename))
+    required <- c("SNP", "A1", "A2", "Z", "N", "P")
+    stopifnot(all(required %in% names(dat)))
+    dat$N <- as.numeric(dat$N)
+    stopifnot(!anyDuplicated(dat$SNP), !anyNA(dat[, ..required]),
+              all(is.finite(dat$Z)), all(is.finite(dat$N)), all(dat$N > 0),
+              all(is.finite(dat$P)), all(dat$P >= 0 & dat$P <= 1),
+              all(dat$A1 %in% c("A", "C", "G", "T")),
+              all(dat$A2 %in% c("A", "C", "G", "T")))
+    as.data.frame(dat)
+}
+exp_pop1 <- read_formatted("EUR_30780")
+exp_pop2 <- read_formatted("BBJ_30780")
+out_pop2 <- read_formatted("BBJ_411.2")
+input_summary <- data.frame(
+    File = c("EUR_30780", "BBJ_30780", "BBJ_411.2"),
+    SNPs = c(nrow(exp_pop1), nrow(exp_pop2), nrow(out_pop2)),
+    Median_N = c(median(exp_pop1$N), median(exp_pop2$N), median(out_pop2$N))
+)
+knitr::kable(input_summary, digits = 0)
+```
+
+# Estimate background parameters
+
+## Prepare LD-score columns
+
+The supplied LD-score file contains within-population EUR and EAS scores and
+cross-population `EUR_EAS` scores. The estimator uses population-labelled columns,
+so map EAS to BBJ explicitly. Remove palindromic variants before harmonization.
+
+```{r ld-scores}
+ldscore <- as.data.frame(data.table::fread(ldscore_file))
+stopifnot(all(c("rsid", "allele1", "allele2", "EUR", "EAS", "EUR_EAS") %in%
+              names(ldscore)))
+ldscore <- ldscore[
+    !is.na(ldscore$allele1) & !is.na(ldscore$allele2) &
+    ldscore$allele1 != XMR::comple(ldscore$allele2), ]
+stopifnot(!anyDuplicated(ldscore$rsid),
+          all(is.finite(as.matrix(ldscore[, c("EUR", "EAS", "EUR_EAS")]))))
+ldscore$BBJ <- ldscore$EAS
+ldscore$EUR_EUR <- ldscore$EUR
+ldscore$EUR_BBJ <- ldscore$EUR_EAS
+ldscore$BBJ_EUR <- ldscore$EUR_EAS
+ldscore$BBJ_BBJ <- ldscore$EAS
+```
+
+## Two-stage LDSC and matrix construction
+
+Estimate background parameters using two-stage bivariate LD score regression.
+Here, `cross_intercept_zero = TRUE` fixes cross-population intercepts at zero.
+
+```{r estimate-background}
+bgparas <- XMR::estimate_bgparas(
+    ldscore0 = ldscore,
+    exposure_code = exposure_code,
+    outcome_code = outcome_code,
+    pop_ref = pop_ref,
+    pop_target = pop_target,
+    gwas_dir = gwas_dir,
+    cross_intercept_zero = TRUE
+)
+stopifnot(nrow(bgparas) == 6L)
+background_display <- bgparas
+for (nm in c("omega11", "omega12", "omega22")) {
+    background_display[[nm]] <- formatC(bgparas[[nm]], format = "e", digits = 6)
+}
+knitr::kable(background_display, digits = 8)
+
+bg <- XMR::qc_bgparas(bgparas, exposure_code, outcome_code, pop_ref, pop_target)
+C <- bg$C
+Omega <- bg$Omega0
+stopifnot(all(C[1, 2:3] == 0), all(C[2:3, 1] == 0))
+```
+
+`qc_bgparas()` constructs the background matrices `C` and `Omega` and performs
+quality-control checks before model fitting.
+
+The matrix order is EUR LDL-C, BBJ LDL-C and BBJ MI.
+
+```{r background-matrices}
+knitr::kable(C, digits = 8, caption = "C: background intercept matrix")
+knitr::kable(Omega, digits = 12, caption = "Omega: background genetic coefficients after QC")
+```
+
+# Harmonize effects and select IVs
+
+## Harmonize to the target-exposure alleles
+
+Use `align_data()` to align the outcome and auxiliary-exposure GWAS to the
+BBJ exposure alleles, so that all three datasets share the same effect-allele
+orientation.
+
+```{r harmonize}
+target_pair <- XMR::align_data(
+    dat1 = exp_pop2, dat2 = out_pop2,
+    trait1.name = "BBJ_30780", trait2.name = "BBJ_411.2", LDSC = FALSE
+)$dat
+names(target_pair) <- c("SNP", "A1", "A2", "b.exp.pop2", "b.out.pop2",
+                        "se.exp.pop2", "se.out.pop2", "pval.exp.pop2", "pval.out.pop2")
+exposure_pair <- XMR::align_data(
+    dat1 = exp_pop2, dat2 = exp_pop1,
+    trait1.name = "BBJ_30780", trait2.name = "EUR_30780", LDSC = FALSE
+)$dat
+names(exposure_pair) <- c("SNP", "A1", "A2", "b.exp.pop2", "b.exp.pop1",
+                          "se.exp.pop2", "se.exp.pop1", "pval.exp.pop2", "pval.exp.pop1")
+harmonized_data <- merge(
+    target_pair,
+    exposure_pair[, c("SNP", "A1", "A2", "b.exp.pop1", "se.exp.pop1", "pval.exp.pop1")],
+    by = c("SNP", "A1", "A2")
+)
+ld_for_fit <- ldscore[, c("rsid", "EUR", "EAS", "EUR_EAS")]
+names(ld_for_fit) <- c("SNP", "L2.pop1", "L2.pop2", "L12")
+harmonized_data <- merge(harmonized_data, ld_for_fit, by = "SNP")
+```
+
+## Select and clump IVs
+
+```{r select-ivs, results='hide'}
+clumped_data <- XMR::select_IVs(
+    data = harmonized_data,
+    Threshold = threshold,
+    bfile = bfile,
+    plink_bin = plink_bin,
+    clump_kb = 10000,
+    clump_r2 = 0.001
+)
+stopifnot(nrow(clumped_data) > 0,
+          all(clumped_data$pval.exp.pop1 < threshold),
+          all(clumped_data$Threshold == threshold))
+```
+
+Select SNPs using the auxiliary-exposure P-value threshold. Fixed-effect
+meta-analysis (FEMA) P values prioritize these SNPs during LD clumping with the
+target-population reference panel.
+
+```{r selection-summary}
+selection_summary <- data.frame(
+    Stage = c("Harmonized SNPs with LD scores", "Auxiliary P < 5e-5", "After target LD clumping"),
+    SNPs = c(nrow(harmonized_data),
+             sum(harmonized_data$pval.exp.pop1 < threshold), nrow(clumped_data))
+)
+knitr::kable(selection_summary)
+iv_preview <- head(clumped_data[, c("SNP", "pval.exp.pop1", "b.exp.fema",
+                                    "se.exp.fema", "pval.exp.fema", "Threshold")])
+for (nm in c("pval.exp.pop1", "pval.exp.fema", "Threshold")) {
+    iv_preview[[nm]] <- formatC(iv_preview[[nm]], format = "e", digits = 4)
+}
+knitr::kable(iv_preview, digits = 9, row.names = FALSE)
+```
+
+# Fit XMR and inspect the result
+
+Fit XMR using the selected IVs, background matrices and auxiliary-exposure
+selection threshold.
+
+```{r fit-xmr, results='hide'}
+tolerance <- if (nrow(clumped_data) < 100L) 1e-8 else 1e-7
+XMR_res <- XMR::fit_XMR(
+    data = clumped_data,
+    exposure = "LDLC",
+    outcome = "MI",
+    C = C,
+    Omega0 = Omega,
+    Threshold = threshold,
+    tol1 = tolerance,
+    tol2 = tolerance,
+    min_thres = 1e-2,
+    verbose = FALSE
+)
+```
+
+```{r result-table}
+result <- data.frame(
+    Exposure = XMR_res$exposure, Outcome = XMR_res$outcome,
+    beta = XMR_res$beta, SE = XMR_res$beta.se,
+    P = as.numeric(XMR_res$beta.pvalue),
+    nIV = XMR_res$nIV, nvalid = XMR_res$nvalid,
+    pi0 = XMR_res$pi0, Threshold = XMR_res$Threshold
+)
+result_display <- result
+result_display$P <- formatC(result$P, format = "e", digits = 4)
+knitr::kable(result_display, digits = c(0, 0, 4, 6, 4, 0, 3, 6, 8))
+```
+
+For this example, the estimated effect is **`r format(XMR_res$beta, digits=5)`**,
+with standard error **`r format(XMR_res$beta.se, digits=5)`** and
+P value **`r XMR_res$beta.pvalue`**. The model uses **`r XMR_res$nIV`** IVs.
+Effect estimates are on the scale of the formatted GWAS inputs.
+
+`post$Pi` reports posterior support for IV contribution. `nvalid` reports
+**model-estimated effective IV counts**, calculated as `pi0 * nIV`.

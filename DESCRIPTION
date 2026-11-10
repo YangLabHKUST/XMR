@@ -1,6 +1,6 @@
 Package: XMR
 Title: Cross-Population Mendelian Randomization
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: person("Xinrui", "Huang", role = c("aut", "cre"),
                   email = "xhuangcn@connect.ust.hk")
 Description: Implements the XMR method for cross-population MR analysis.
@@ -31,5 +31,8 @@ Suggests:
     MRPRESSO,
     robustbase,
     MRcML,
-    TEMR
+    TEMR,
+    knitr,
+    rmarkdown,
+    jsonlite
 RoxygenNote: 7.3.2

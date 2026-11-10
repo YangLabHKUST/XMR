@@ -13,7 +13,8 @@ estimate_bgparas(
   gwas_dir = "./formatted_data",
   snp_col = "rsid",
   a1_col = "allele1",
-  z2_threshold = 30
+  z2_threshold = 30,
+  cross_intercept_zero = TRUE
 )
 }
 \arguments{
@@ -34,9 +35,14 @@ estimate_bgparas(
 \item{a1_col}{Character. Column name for allele1 in ldscore0. Default "allele1".}
 
 \item{z2_threshold}{Numeric. Z-squared threshold for filtering in stage 1. Default 30.}
+
+\item{cross_intercept_zero}{Logical. Fix the cross-population LDSC intercept
+to zero during stage 2. Default TRUE. Set FALSE
+to estimate cross-population intercepts without fixing them to zero.
+Within-population intercepts are still estimated in stage 1.}
 }
 \value{
-A data.frame with 6 rows, one per trait-population pair,
+A data.frame with up to 6 rows, one per successfully fitted trait-population pair,
   containing columns: trait1, trait2, pop1, pop2, omega11, omega12, omega22, c1, c12, c2.
 }
 \description{

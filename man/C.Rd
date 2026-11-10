@@ -5,12 +5,18 @@
 \alias{C}
 \title{C matrix}
 \format{
-A 3x3 numeric matrix.
+A 3x3 numeric matrix ordered as EUR LDL-C, BBJ LDL-C and BBJ MI.
+}
+\source{
+Rebuilt by inst/tutorial/XMR_tutorial_LDLC_MI.Rmd; input checksums
+  and settings are recorded in inst/extdata/LDLC_MI_example_provenance.json.
 }
 \usage{
 C
 }
 \description{
-The estimated C matrix capturing the effects of sample structure.
+Background intercept matrix for the EUR-to-BBJ LDL-C to MI example.
+Cross-population intercepts are fixed at zero during stage-2 LDSC;
+within-population intercepts remain estimated.
 }
 \keyword{datasets}

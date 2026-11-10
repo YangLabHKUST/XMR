@@ -5,7 +5,8 @@
 #' and truncate off-diagonal correlations whose absolute value exceeds 1.
 #'
 #' @param bgparas A \code{data.frame} returned by \code{estimate_bgparas()},
-#'   containing columns \code{trait1}, \code{trait2}, \code{Omega12}, and \code{c12}.
+#'   containing columns \code{trait1}, \code{trait2}, \code{omega12}, and \code{c12}.
+#'   The alternative column name \code{Omega12} is also accepted.
 #' @param exposure_code Character. Exposure trait code, e.g. \code{"30780"}.
 #' @param outcome_code Character. Outcome trait code, e.g. \code{"411.2"}.
 #' @param pop_ref Character. Reference (auxiliary) population label, e.g. \code{"EUR"}.
@@ -27,6 +28,12 @@ qc_bgparas <- function(bgparas,
                         pop_ref,
                         pop_target,
                         truncation_corr = 0.95) {
+
+  # Accept the column returned by estimate_bgparas(), also accepting the alternative column name.
+  bgparas <- as.data.frame(bgparas)
+  if (!"Omega12" %in% names(bgparas) && "omega12" %in% names(bgparas)) {
+    bgparas$Omega12 <- bgparas$omega12
+  }
 
   ## ---- reshape to symmetric form ----
   paras <- bgparas[, c("trait1", "trait2", "Omega12", "c12")]

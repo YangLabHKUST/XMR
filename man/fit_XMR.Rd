@@ -54,7 +54,8 @@ Default `matrix(0, 3, 3)`.}
 
 \item{tol2}{tolerance of the 2nd fitting round which fits beta, default `1e-06`.}
 
-\item{Threshold}{modified IV selection threshold for correction of selection bias.}
+\item{Threshold}{Auxiliary-exposure P-value threshold used for IV eligibility.
+FEMA P values rank candidates for clumping; they do not replace this threshold.}
 
 \item{ELBO}{logical, whether to track the evidence lower bound or not.
 If `FALSE`, check the maximum likelihood instead. Default `FALSE`.}
@@ -77,11 +78,12 @@ A list with the following elements:
   \item{beta.pvalue}{p-value}
   \item{tau.sq}{variance of the outcome effect in the causal inference module}
   \item{SigmaX}{covariance matrix of exposure effects in the causal inference module}
-  \item{post}{posterior probability of the validity of each input IV}
+  \item{post}{posterior moments, including Pi: foreground-membership probabilities
+    measuring model-based support for each candidate IV's contribution}
   \item{nIV}{number of input IVs}
-  \item{nvalid}{number of valid IVs detected by XMR}
+  \item{nvalid}{model-estimated effective IV counts}
   \item{pi0}{the probability of an SNP with foreground signals after selection}
-  \item{Threshold}{input modified IV selection threshold for correction of selection bias}
+  \item{Threshold}{input auxiliary-exposure P-value threshold}
   \item{fit1_elbos}{records of the ELBO changes in the 1st fitting round}
   \item{fit2_elbos}{records of the ELBO changes in the 2nd fitting round}
   \item{fit1_likelis}{records of the likelihood changes in the 1st fitting round}
@@ -98,11 +100,7 @@ XMR: a cross-population Mendelian randomization method for
 exposure <- "LDLC"
 outcome  <- "MI"
 threshold <- 5e-05
-N1 <- 343621 # EUR sample size
-N2 <- 72866  # EAS sample size
-t0 <- abs(qnorm(threshold / 2))
-dt <- 0.13 / (sqrt(N2 / N1))
-modified_threshold <- 2 * (1 - pnorm(abs(t0 + dt))) # modified threshold
+# EUR-to-BBJ LDLC-MI example; background and IV selection are matched.
 data(C)
 data(Omega)
 data(clumped_data)
@@ -110,7 +108,7 @@ XMR_res <- fit_XMR(
   data = clumped_data,
   C = C,
   Omega0 = Omega,
-  Threshold = modified_threshold,
+  Threshold = threshold,
   tol1 = 1e-07,
   tol2 = 1e-07,
   min_thres = 1e-2
