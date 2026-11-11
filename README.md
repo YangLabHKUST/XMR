@@ -184,16 +184,9 @@ Each experiment directory contains separate `code/` and `plot/` folders.
 
 #### 2. Download and prepare GWAS data
 
-Download the raw GWAS summary statistics from the sources listed in [Supplementary data.xlsx](https://github.com/YangLabHKUST/XMR/blob/main/Supplementary%20data.xlsx):
+Download the raw GWAS summary statistics from the sources listed in [GWAS_data_sources.csv](https://github.com/YangLabHKUST/XMR/blob/main/GWAS_data_sources.csv). The table groups the download links by experiment, trait, cohort and population, with references to the corresponding Supplementary tables.
 
-| Experiment | Worksheets |
-|------------|------------|
-| Negative-control studies | Supplementary data S1–S3 |
-| Auxiliary-dataset sensitivity | Supplementary data S4–S6 |
-| SHBG–T2D analysis | Supplementary data S10 |
-| BBJ–TPMI–UKBB analysis | Supplementary data S7–S9 |
-
-Prepare the formatted GWAS tables and trait lists at the locations specified in [DATA.md](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/DATA.md). The real-data analysis scripts start from these formatted inputs and estimate the background parameters needed for method fitting.
+Prepare the GWAS tables using `MRAPSS::format_data()` as described in [FORMATTING.md](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/FORMATTING.md), and save them at the locations specified in [DATA.md](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/DATA.md). The trait lists and manifests are included in the reproduction repository. The real-data analysis scripts start from the formatted inputs and estimate the background parameters needed for method fitting.
 
 <!--
 Alternatively, you can **skip the raw data step** and start directly from our pre-formatted data by downloading the archives below. Then place them in the repository root and extract:
@@ -218,14 +211,14 @@ Each archive preserves the directory structure and will merge into existing dire
 #### 3. External resources (download separately)
 
 - **PLINK software**: download [PLINK 1.9](https://www.cog-genomics.org/plink/1.9/). The real-data scripts expect the executable at `negative_controls/plink_Linux`.
-- **Real-data LD scores and reference panels**: download the study resources below and place them at the locations shown.
+- **Real-data LD scores and reference panels**: obtain the resources below and place them at the locations shown.
 - **Simulation LD matrices**: download the white British and East Asian HapMap3 matrices from [ViLMA](https://github.com/jeffspence/vilma#ld-matrices). Follow the [simulation workflow](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/simulations/README.md) to prepare the chromosome-specific inputs.
 
 | Resource | Location in XMR_reproduce | Download |
 |----------|---------------------------|----------|
-| EUR/EAS/AFR and EUR/CSA LD scores | `negative_controls/LDscore_eas_brit_afr.txt`; `negative_controls/LDscore_SAS_EUR.csv` | To be added |
-| EUR, EAS, AFR and SAS PLINK reference panels | `negative_controls/1kg_pops/` | To be added |
-| Trait lists and analysis manifests | Experiment-specific locations in `DATA.md` | To be added |
+| EUR/EAS/AFR and EUR/CSA LD scores | `negative_controls/LDscore_eas_brit_afr.txt`; `negative_controls/LDscore_SAS_EUR.csv` | Zenodo link pending publication |
+| EUR, EAS, AFR and SAS PLINK reference panels | `negative_controls/1kg_pops/` | [Public source and preparation](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/REFERENCE_PANELS.md) |
+| Trait lists and analysis manifests | Experiment-specific locations in `DATA.md` | [Included files](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/DATA.md#experiment-specific-inputs) |
 
 The real-data PLINK panels use GRCh38 coordinates; the simulation LD matrices use GRCh37 coordinates. CSA analyses use the SAS panel, and BBJ and TPMI analyses use the EAS panel.
 
