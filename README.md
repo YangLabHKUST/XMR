@@ -216,7 +216,7 @@ Each archive preserves the directory structure and will merge into existing dire
 
 | Resource | Location in XMR_reproduce | Download |
 |----------|---------------------------|----------|
-| EUR/EAS/AFR and EUR/CSA LD scores | `negative_controls/LDscore_eas_brit_afr.txt`; `negative_controls/LDscore_SAS_EUR.csv` | Zenodo link pending publication |
+| EUR/EAS/AFR and EUR/CSA LD scores | `negative_controls/LDscore_eas_brit_afr.txt`; `negative_controls/LDscore_SAS_EUR.csv` | [Zenodo](https://doi.org/10.5281/zenodo.24137958) |
 | EUR, EAS, AFR and SAS PLINK reference panels | `negative_controls/1kg_pops/` | [Public source and preparation](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/REFERENCE_PANELS.md) |
 | Trait lists and analysis manifests | Experiment-specific locations in `DATA.md` | [Included files](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/DATA.md#experiment-specific-inputs) |
 
