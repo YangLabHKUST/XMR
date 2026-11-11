@@ -132,8 +132,6 @@ Source code for the main-figure analyses is available at [YangLabHKUST/XMR_repro
 [Workflow](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/simulations/README.md) |
 [Result summaries](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/simulations/plot)
 
-The final Figure 3 visualization script will be added separately.
-
 **Negative-control studies:**
 
 [Experiments](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/negative_controls/code) |
@@ -157,17 +155,6 @@ The final Figure 3 visualization script will be added separately.
 [Experiments](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/BBJ_TPMI/code) |
 [Workflow](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/BBJ_TPMI/README.md) |
 [Visualization](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/BBJ_TPMI/plot)
-
-Complete real-data results are provided in [Supplementary data.xlsx](https://github.com/YangLabHKUST/XMR/blob/main/Supplementary%20data.xlsx):
-
-| Experiment | Worksheets |
-|------------|------------|
-| Negative-control studies | Supplementary data S1–S3 |
-| Auxiliary-dataset sensitivity | Supplementary data S4–S6 |
-| SHBG–T2D analysis | Supplementary data S10 |
-| BBJ–TPMI–UKBB analysis | Supplementary data S7–S9 |
-
-See the `Contents` worksheet for the table index and `Column definitions` for field descriptions.
 
 ### Setup
 
@@ -197,16 +184,16 @@ Each experiment directory contains separate `code/` and `plot/` folders.
 
 #### 2. Download and prepare GWAS data
 
-Download the raw GWAS summary statistics from the sources listed in the Supplementary Information:
+Download the raw GWAS summary statistics from the sources listed in [Supplementary data.xlsx](https://github.com/YangLabHKUST/XMR/blob/main/Supplementary%20data.xlsx):
 
-| Experiment | Data source information |
-|------------|-------------------------|
-| Negative-control studies | Section 3.1; Table S1 |
-| Auxiliary-dataset sensitivity | Section 3.2; Tables S2–S4 |
-| SHBG–T2D analysis | Section 3.3; Tables S5–S6 |
-| BBJ–TPMI–UKBB analysis | Section 3.4; Tables S7–S9 |
+| Experiment | Worksheets |
+|------------|------------|
+| Negative-control studies | Supplementary data S1–S3 |
+| Auxiliary-dataset sensitivity | Supplementary data S4–S6 |
+| SHBG–T2D analysis | Supplementary data S10 |
+| BBJ–TPMI–UKBB analysis | Supplementary data S7–S9 |
 
-Apply the study-specific quality control and formatting described in the Supplementary Methods. Prepare the formatted GWAS tables and trait lists at the locations specified in [DATA.md](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/DATA.md). The real-data analysis scripts start from these formatted inputs and estimate the background parameters needed for method fitting.
+Prepare the formatted GWAS tables and trait lists at the locations specified in [DATA.md](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/DATA.md). The real-data analysis scripts start from these formatted inputs and estimate the background parameters needed for method fitting.
 
 <!--
 Alternatively, you can **skip the raw data step** and start directly from our pre-formatted data by downloading the archives below. Then place them in the repository root and extract:
@@ -244,108 +231,38 @@ The real-data PLINK panels use GRCh38 coordinates; the simulation LD matrices us
 
 #### 4. Install dependencies
 
-Install the R packages required for the analyses and visualization:
+To run XMR and the comparison methods, install the required R packages:
 
 ```r
+# In R
+# install.packages("devtools")
+
+devtools::install_github("YangLabHKUST/XMAP")
+devtools::install_github("YangLabHKUST/XMR")
+devtools::install_github("hhoulei/TEMR")
+devtools::install_github("YangLabHKUST/MR-APSS")
+devtools::install_github("yoonsucho/CAMERA")
+devtools::install_github("noahlorinczcomi/MRBEE")
+devtools::install_github("harryyiheyang/MRBEEX")
+
 install.packages(c(
-  "remotes", "BiocManager",
   "data.table", "Matrix", "mvtnorm", "expm", "digest",
   "ieugwasr", "tibble", "R.utils",
   "ggplot2", "cowplot", "ggrepel", "scales"
 ))
 
-BiocManager::install(
-  c("GenomicRanges", "IRanges"),
-  ask = FALSE,
-  update = FALSE
-)
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install(c("GenomicRanges", "IRanges"))
 ```
 
-Install XMAP before installing XMR:
-
-```r
-remotes::install_github(
-  "YangLabHKUST/XMAP",
-  upgrade = "never"
-)
-
-remotes::install_github(
-  "YangLabHKUST/XMR@e847e78f687ad0b3dc524624977deeea55e91d37",
-  upgrade = "never"
-)
-```
-
-Install the comparison methods:
-
-```r
-# MR-APSS
-remotes::install_github(
-  "YangLabHKUST/MR-APSS@85c18eaef8ccbc1b330d31db0b3984c2fd0f528f",
-  upgrade = "never"
-)
-
-# CAMERA
-remotes::install_github(
-  "yoonsucho/CAMERA@24db2f8f2c7290a4e1bf0269e05a4bc0dd74b4cb",
-  upgrade = "never"
-)
-
-# MRBEE
-remotes::install_github(
-  "noahlorinczcomi/MRBEE@07c060cac5e8c831dc3adfa2b9f8b1f4fdb04db3",
-  upgrade = "never"
-)
-
-# MRBEE-TL
-remotes::install_github(
-  "harryyiheyang/MRBEEX@226fdaed9cf4ca42f3d2aa7a05987e3260e694be",
-  upgrade = "never"
-)
-
-# TEMR
-remotes::install_github(
-  "hhoulei/TEMR@6566f33527c6e575aaced2840518c1a11aaa2957",
-  upgrade = "never"
-)
-```
-
-The simulation workflow also uses Python utilities requiring NumPy and pandas. Install these in the terminal:
+The simulation utilities also require NumPy and pandas:
 
 ```bash
 python3 -m pip install numpy pandas
 ```
 
-Recorded package versions are available in [R_packages.tsv](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/environment/R_packages.tsv). Additional environment details are provided [here](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/environment).
-
-#### 5. Run the analysis
-
-Run the following commands from the repository root (`XMR_reproduce/`) for the analyses of interest:
-
-```bash
-# Negative-control studies
-Rscript negative_controls/code/run_analysis.R
-
-# Auxiliary-dataset sensitivity
-Rscript auxiliary_sensitivity/code/run_analysis.R
-
-# SHBG–T2D analysis
-Rscript SHBG_T2D/code/run_analysis.R
-
-# BBJ–TPMI analysis
-Rscript BBJ_TPMI/code/run_analysis.R
-```
-
-Each entry point runs background preparation and method fitting in the required order. Run visualization separately using the command in the corresponding workflow, for example:
-
-```bash
-Rscript negative_controls/plot/plot_negative_control_QQ_by_method_CSA_AFR_EUR_3x5.R
-```
-
-For simulations, follow the [LD-input preparation steps](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/simulations/README.md#prepare-ld-inputs), then run:
-
-```bash
-bash simulations/code/run_fig3.sh --all
-```
+Package versions recorded for the analyses are listed in [R_packages.tsv](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/environment/R_packages.tsv).
 
 
 ## System Requirements
