@@ -115,87 +115,100 @@ For the LDLC → MI example, the expected output is approximately:
 
 ## Reproducibility
 
-We applied XMR and 15 existing summary-level MR methods across three key domains:
-- **Simulations**: evaluating method performance under various scenarios.
-- **Negative-control studies**: testing the causal effects of 35 traits on 2 negative-control outcomes (skin tanning ability, natural hair color) in Africans (AFR) and Central/South Asians (CSA).
-- **Real-data analysis**: inferring causal relationships in 3 underrepresented populations — East Asians (EAS), Central/South Asians (CSA), and Africans (AFR).
+We evaluated XMR and comparison methods across five experimental settings:
 
-Source code and data for reproducing all results are available at [YangLabHKUST/XMR_reproduce](https://github.com/YangLabHKUST/XMR_reproduce). 
-The XMR execution scripts provided below feature a parallelized framework designed to efficiently analyze multiple trait pairs simultaneously.
+- **Simulations**: evaluating method performance under baseline and reduced-confounding scenarios.
+- **Negative-control studies**: testing the causal effects of 35 traits on 2 negative-control outcomes (skin tanning ability and natural hair color) in Africans (AFR) and Central/South Asians (CSA).
+- **Auxiliary-dataset sensitivity**: comparing FinnGen and Pan-UKB as auxiliary datasets for analyses in BioBank Japan (BBJ).
+- **SHBG–T2D analysis**: estimating the effect of sex hormone-binding globulin on type 2 diabetes across populations.
+- **BBJ–TPMI analysis**: comparing causal estimates across BBJ, the Taiwan Precision Medicine Initiative (TPMI), and UK Biobank (UKBB).
+
+Source code for the main-figure analyses is available at [YangLabHKUST/XMR_reproduce](https://github.com/YangLabHKUST/XMR_reproduce). Experiment scripts and visualization scripts are provided separately.
 
 **Simulations:**
 
-[Experiments and visualization](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/sim/code/simulation_reproduce_plot.ipynb)
+[Baseline experiments](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/simulations/code/baseline) |
+[Reduced-confounding experiments](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/simulations/code/reduced_confounding) |
+[Workflow](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/simulations/README.md) |
+[Result summaries](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/simulations/plot)
+
+The final Figure 3 visualization script will be added separately.
 
 **Negative-control studies:**
 
-[Format data](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/format_data.ipynb) |
-[XMR in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_XMR_AFR.ipynb) |
-[XMR in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_XMR_CSA.ipynb) |
-[Other methods in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_other_AFR.ipynb) |
-[Other methods in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/run_other_CSA.ipynb) |
-[Visualization](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/nc/code/nc-plot.ipynb)
+[Experiments](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/negative_controls/code) |
+[Workflow](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/negative_controls/README.md) |
+[Visualization](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/negative_controls/plot)
 
-**Real-data analysis for EAS:**
+**Auxiliary-dataset sensitivity:**
 
-[Format data](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/format_data.ipynb) |
-[XMR in BBJ](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_XMR_BBJ.ipynb) |
-[XMR in TPMI](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_XMR_TPMI.ipynb) |
-[Other methods in BBJ](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_other_BBJ.ipynb) |
-[Other methods in TPMI](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/run_other_TPMI.ipynb) |
-[Visualization](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_EAS/code/EAS-plot.ipynb)
+[Experiments](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/auxiliary_sensitivity/code) |
+[Workflow](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/auxiliary_sensitivity/README.md) |
+[Visualization](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/auxiliary_sensitivity/plot)
 
-**Real-data analysis for CSA and AFR:** 
+**SHBG–T2D analysis:**
 
-[Format data](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/format_data.ipynb) |
-[XMR in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/CSA/run_XMR_CSA.ipynb) |
-[Other methods in CSA](http://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/CSA/run_other_CSA.ipynb) |
-[Visualization in CSA](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/CSA-plot.ipynb)
+[Experiments](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/SHBG_T2D/code) |
+[Workflow](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/SHBG_T2D/README.md) |
+[Visualization](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/SHBG_T2D/plot)
 
-[XMR in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR/run_XMR_AFR.ipynb) |
-[Other methods in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR/run_other_AFR.ipynb) |
-[Visualization in AFR](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/AFR-plot.ipynb)
+**BBJ–TPMI analysis:**
 
-[Case study in EAS: SHBG to T2D](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_in_EAS.ipynb) |
-[Visualization: case study across 4 populations](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/real_data_CSA_AFR/code/case_study_plot.ipynb)
+[Experiments](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/BBJ_TPMI/code) |
+[Workflow](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/BBJ_TPMI/README.md) |
+[Visualization](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/BBJ_TPMI/plot)
+
+Complete real-data results are provided in [Supplementary data.xlsx](https://github.com/YangLabHKUST/XMR/blob/main/Supplementary%20data.xlsx):
+
+| Experiment | Worksheets |
+|------------|------------|
+| Negative-control studies | Supplementary data S1–S3 |
+| Auxiliary-dataset sensitivity | Supplementary data S4–S6 |
+| SHBG–T2D analysis | Supplementary data S10 |
+| BBJ–TPMI–UKBB analysis | Supplementary data S7–S9 |
+
+See the `Contents` worksheet for the table index and `Column definitions` for field descriptions.
 
 ### Setup
 
-All data and results needed to reproduce the above experiments are publicly available.
-See **Step 2** for download links.
-Follow below steps for reproduction:
+Follow the steps below to prepare the inputs and run the analyses.
 
-#### 1. Clone this repository
+#### 1. Clone the reproduction repository
 
 ```bash
 git clone https://github.com/YangLabHKUST/XMR_reproduce.git
 cd XMR_reproduce
 ```
 
-#### Directory structure
+Directory structure:
 
-```
+```text
 XMR_reproduce/
-├── nc/                  # Negative-control analysis in AFR & CSA
-├── real_data_CSA_AFR/   # Real data analysis in CSA & AFR
-├── real_data_EAS/       # Real data analysis in EAS
-└── sim/                 # Simulations
+├── simulations/            # Baseline and reduced-confounding simulations
+├── negative_controls/      # Negative-control analysis in AFR and CSA
+├── auxiliary_sensitivity/  # FinnGen and Pan-UKB auxiliary datasets
+├── SHBG_T2D/               # SHBG–T2D analysis across populations
+├── BBJ_TPMI/               # BBJ–TPMI–UKBB comparison
+├── environment/            # Software dependencies and versions
+└── DATA.md                 # Input formats and file locations
 ```
 
-#### 2. Download data
+Each experiment directory contains separate `code/` and `plot/` folders.
 
-We provide archived files containing formatted data, LD score files, analysis results, and other files needed for reproduction.
+#### 2. Download and prepare GWAS data
 
-**Raw GWAS summary statistics** are not included due to their large size (~8–10 GB each).
-Data sources are listed in the following tables — download the raw files, find the target folder in the above directory, place them in the corresponding `raw_data/` folder, and run `format_data.ipynb` in the target folder to format:
+Download the raw GWAS summary statistics from the sources listed in the Supplementary Information:
 
-| Experiment | Data source table |
-|------------|-------------------|
-| Negative-control studies | [`nc_data_source.csv`](https://github.com/YangLabHKUST/XMR/blob/main/nc_data_source.csv) |
-| Real-data analysis (EAS) | [`real_data_EAS_data_source.csv`](https://github.com/YangLabHKUST/XMR/blob/main/real_data_EAS_data_source.csv) |
-| Real-data analysis (AFR) | [`real_data_AFR_data_source.csv`](https://github.com/YangLabHKUST/XMR/blob/main/real_data_AFR_data_source.csv) |
-| Real-data analysis (CSA) | [`real_data_CSA_data_source.csv`](https://github.com/YangLabHKUST/XMR/blob/main/real_data_CSA_data_source.csv) |
+| Experiment | Data source information |
+|------------|-------------------------|
+| Negative-control studies | Section 3.1; Table S1 |
+| Auxiliary-dataset sensitivity | Section 3.2; Tables S2–S4 |
+| SHBG–T2D analysis | Section 3.3; Tables S5–S6 |
+| BBJ–TPMI–UKBB analysis | Section 3.4; Tables S7–S9 |
 
+Apply the study-specific quality control and formatting described in the Supplementary Methods. Prepare the formatted GWAS tables and trait lists at the locations specified in [DATA.md](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/DATA.md). The real-data analysis scripts start from these formatted inputs and estimate the background parameters needed for method fitting.
+
+<!--
 Alternatively, you can **skip the raw data step** and start directly from our pre-formatted data by downloading the archives below. Then place them in the repository root and extract:
 
 | File | Size | Link |
@@ -213,41 +226,127 @@ tar xzvf real_data_CSA_AFR.tar.gz
 ```
 
 Each archive preserves the directory structure and will merge into existing directories automatically.
+-->
 
 #### 3. External resources (download separately)
 
-The following large reference files may not be included in the archives due to size. Please download them manually:
+- **PLINK software**: download [PLINK 1.9](https://www.cog-genomics.org/plink/1.9/). The real-data scripts expect the executable at `negative_controls/plink_Linux`.
+- **Real-data LD scores and reference panels**: download the study resources below and place them at the locations shown.
+- **Simulation LD matrices**: download the white British and East Asian HapMap3 matrices from [ViLMA](https://github.com/jeffspence/vilma#ld-matrices). Follow the [simulation workflow](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/simulations/README.md) to prepare the chromosome-specific inputs.
 
-- **1000 Genomes PLINK files**: download and place in `nc/1kg_pops/`; refer to [prepare_1kg_reference.sh](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/prepare_1kg_reference.sh)
-- **PLINK software**: download from [https://www.cog-genomics.org/plink2](https://www.cog-genomics.org/plink2)
+| Resource | Location in XMR_reproduce | Download |
+|----------|---------------------------|----------|
+| EUR/EAS/AFR and EUR/CSA LD scores | `negative_controls/LDscore_eas_brit_afr.txt`; `negative_controls/LDscore_SAS_EUR.csv` | To be added |
+| EUR, EAS, AFR and SAS PLINK reference panels | `negative_controls/1kg_pops/` | To be added |
+| Trait lists and analysis manifests | Experiment-specific locations in `DATA.md` | To be added |
 
+The real-data PLINK panels use GRCh38 coordinates; the simulation LD matrices use GRCh37 coordinates. CSA analyses use the SAS panel, and BBJ and TPMI analyses use the EAS panel.
 
-#### 4. Run the analysis
-All scripts assume the **working directory is the repository root** (`XMR_reproduce/`).
+#### 4. Install dependencies
+
+Install the R packages required for the analyses and visualization:
 
 ```r
-# In R
-setwd("/path/to/XMR_reproduce")  # set to your local path
-source("nc/code/run_XMR_AFR.R")
+install.packages(c(
+  "remotes", "BiocManager",
+  "data.table", "Matrix", "mvtnorm", "expm", "digest",
+  "ieugwasr", "tibble", "R.utils",
+  "ggplot2", "cowplot", "ggrepel", "scales"
+))
+
+BiocManager::install(
+  c("GenomicRanges", "IRanges"),
+  ask = FALSE,
+  update = FALSE
+)
 ```
 
-To run XMR and the 15 compared methods, install the required R packages first:
+Install XMAP before installing XMR:
 
 ```r
-# In R
-#install.packages("devtools") #install.packages("remotes")
-devtools::install_github("YangLabHKUST/XMAP")
-devtools::install_github("hhoulei/TEMR")
-devtools::install_github("YangLabHKUST/MR-APSS")
-remotes::install_github("MRCIEU/TwoSampleMR")
-devtools::install_github("jean997/cause@v1.2.0")
-devtools::install_github("tye27/mr.divw")
-devtools::install_github("gqi/MRMix")
-devtools::install_github("xue-hr/MRcML")
-devtools::install_github("rondolab/MR-PRESSO")
-install.packages("MendelianRandomization")
-install.packages("robustbase")
+remotes::install_github(
+  "YangLabHKUST/XMAP",
+  upgrade = "never"
+)
+
+remotes::install_github(
+  "YangLabHKUST/XMR@e847e78f687ad0b3dc524624977deeea55e91d37",
+  upgrade = "never"
+)
 ```
+
+Install the comparison methods:
+
+```r
+# MR-APSS
+remotes::install_github(
+  "YangLabHKUST/MR-APSS@85c18eaef8ccbc1b330d31db0b3984c2fd0f528f",
+  upgrade = "never"
+)
+
+# CAMERA
+remotes::install_github(
+  "yoonsucho/CAMERA@24db2f8f2c7290a4e1bf0269e05a4bc0dd74b4cb",
+  upgrade = "never"
+)
+
+# MRBEE
+remotes::install_github(
+  "noahlorinczcomi/MRBEE@07c060cac5e8c831dc3adfa2b9f8b1f4fdb04db3",
+  upgrade = "never"
+)
+
+# MRBEE-TL
+remotes::install_github(
+  "harryyiheyang/MRBEEX@226fdaed9cf4ca42f3d2aa7a05987e3260e694be",
+  upgrade = "never"
+)
+
+# TEMR
+remotes::install_github(
+  "hhoulei/TEMR@6566f33527c6e575aaced2840518c1a11aaa2957",
+  upgrade = "never"
+)
+```
+
+The simulation workflow also uses Python utilities requiring NumPy and pandas. Install these in the terminal:
+
+```bash
+python3 -m pip install numpy pandas
+```
+
+Recorded package versions are available in [R_packages.tsv](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/environment/R_packages.tsv). Additional environment details are provided [here](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/environment).
+
+#### 5. Run the analysis
+
+Run the following commands from the repository root (`XMR_reproduce/`) for the analyses of interest:
+
+```bash
+# Negative-control studies
+Rscript negative_controls/code/run_analysis.R
+
+# Auxiliary-dataset sensitivity
+Rscript auxiliary_sensitivity/code/run_analysis.R
+
+# SHBG–T2D analysis
+Rscript SHBG_T2D/code/run_analysis.R
+
+# BBJ–TPMI analysis
+Rscript BBJ_TPMI/code/run_analysis.R
+```
+
+Each entry point runs background preparation and method fitting in the required order. Run visualization separately using the command in the corresponding workflow, for example:
+
+```bash
+Rscript negative_controls/plot/plot_negative_control_QQ_by_method_CSA_AFR_EUR_3x5.R
+```
+
+For simulations, follow the [LD-input preparation steps](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/simulations/README.md#prepare-ld-inputs), then run:
+
+```bash
+bash simulations/code/run_fig3.sh --all
+```
+
 
 ## System Requirements
 
