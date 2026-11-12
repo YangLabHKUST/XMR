@@ -130,7 +130,7 @@ Source code for the main-figure analyses is available at [YangLabHKUST/XMR_repro
 [Baseline experiments](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/simulations/code/baseline) |
 [Reduced-confounding experiments](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/simulations/code/reduced_confounding) |
 [Workflow](https://github.com/YangLabHKUST/XMR_reproduce/blob/main/simulations/README.md) |
-[Result summaries](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/simulations/plot)
+[Visualization](https://github.com/YangLabHKUST/XMR_reproduce/tree/main/simulations/plot)
 
 **Negative-control studies:**
 
